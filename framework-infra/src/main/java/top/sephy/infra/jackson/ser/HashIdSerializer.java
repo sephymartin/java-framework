@@ -17,6 +17,7 @@ package top.sephy.infra.jackson.ser;
 
 import java.io.IOException;
 
+import com.fasterxml.jackson.databind.ser.std.NumberSerializers;
 import org.hashids.Hashids;
 
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -52,12 +53,14 @@ public class HashIdSerializer extends StdSerializer<Long> implements ContextualS
     @Override
     public JsonSerializer<?> createContextual(SerializerProvider prov, BeanProperty property)
         throws JsonMappingException {
-        JsonHashId jsonHashId = property.getAnnotation(JsonHashId.class);
-        if (jsonHashId != null) {
-            String salt = jsonHashId.salt();
-            Hashids hashIds = new Hashids(salt);
-            return new HashIdSerializer(hashIds);
+        if (property != null ) {
+            JsonHashId jsonHashId = property.getAnnotation(JsonHashId.class);
+            if (jsonHashId != null) {
+                String salt = jsonHashId.salt();
+                Hashids hashIds = new Hashids(salt);
+                return new HashIdSerializer(hashIds);
+            }
         }
-        return StdKeySerializers.getStdKeySerializer(prov.getConfig(), property.getClass(), true);
+        return new NumberSerializers.LongSerializer(Long.class);
     }
 }
