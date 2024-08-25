@@ -13,15 +13,6 @@
 
     <artifactId>framework-infra</artifactId>
 
-    <distributionManagement>
-        <repository>
-            <id>nexus-snapshot</id>
-            <name>nexus-snapshot</name>
-            <url>http://nexus.sephy.io/repository/maven-snapshots/</url>
-        </repository>
-
-    </distributionManagement>
-
     <dependencies>
 
         <dependency>
@@ -251,7 +242,7 @@
                 <configuration>
                     <java>
                         <licenseHeader>
-                            <file>${project.basedir}/license-header</file>
+                            <file>${project.basedir}/../license-header</file>
                         </licenseHeader>
                     </java>
                 </configuration>
