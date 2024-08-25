@@ -16,6 +16,6 @@ module.exports = {
     `./mvnw spotless:apply -DspotlessFiles=${filenames.join(',')}`,
   '**/pom.xml': (filenames) =>
     `./mvnw spotless:apply -DspotlessFiles=${filenames.join(',')}`,
-  '**/*.{son,js,yml,yaml}': (filenames) =>
+  '**/*.{json,js,yml,yaml}': (filenames) =>
     `prettier --write --ignore-unknown ${filenames.join(' ')}`,
 }
