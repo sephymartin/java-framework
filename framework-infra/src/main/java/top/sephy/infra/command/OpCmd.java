@@ -1,4 +1,6 @@
 package top.sephy.infra.command;
 
-public class OpCmd {
-}
+/**
+ * Design for CQRS command, which is used to represent the command operation.
+ */
+public interface OpCmd {}
