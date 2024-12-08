@@ -68,38 +68,38 @@ public class AutoFillInterceptor implements Interceptor {
 
         if (args.length > 1) {
             Object arg = args[1];
-            Class<?> clazz = arg.getClass();
+            if (arg != null) {
+                Class<?> clazz = arg.getClass();
+                AuditingConfig config = null;
 
-            AuditingConfig config = null;
-
-            // 如果是集合类型, 取第一个元素的类型
-            // mybatis 针对多参数，或者单个参数是Collection和Array 参数包装成MapperMethod.ParamMap（HashMap）,否则参数类型直接返回所传当前参数，
-            // 可看org.apache.ibatis.reflection.ParamNameResolver.wrapToMapIfCollection
-            if (MapperMethod.ParamMap.class.isAssignableFrom(clazz)) {
-                MapperMethod.ParamMap<Object> paramMap = (MapperMethod.ParamMap<Object>)arg;
-                if (paramMap.containsKey("collection")) {
-                    Collection entityList = (Collection)paramMap.get("collection");
-                    if (!CollectionUtils.isEmpty(entityList)) {
-                        for (Object elem : entityList) {
-                            clazz = elem.getClass();
-                            config = auditingConfigMap.computeIfAbsent(clazz, this::extractConfig);
-                            fillFields(mappedStatement, config, elem);
+                // 如果是集合类型, 取第一个元素的类型
+                // mybatis 针对多参数，或者单个参数是Collection和Array 参数包装成MapperMethod.ParamMap（HashMap）,否则参数类型直接返回所传当前参数，
+                // 可看org.apache.ibatis.reflection.ParamNameResolver.wrapToMapIfCollection
+                if (MapperMethod.ParamMap.class.isAssignableFrom(clazz)) {
+                    MapperMethod.ParamMap<Object> paramMap = (MapperMethod.ParamMap<Object>) arg;
+                    if (paramMap.containsKey("collection")) {
+                        Collection entityList = (Collection) paramMap.get("collection");
+                        if (!CollectionUtils.isEmpty(entityList)) {
+                            for (Object elem : entityList) {
+                                clazz = elem.getClass();
+                                config = auditingConfigMap.computeIfAbsent(clazz, this::extractConfig);
+                                fillFields(mappedStatement, config, elem);
+                            }
                         }
                     }
+                    Object currentUserId = currentUserExtractor.getCurrentUserId();
+                    if (paramMap.containsKey(MyBatisConstants.PARAM_CREATED_BY)) {
+                        paramMap.putIfAbsent(MyBatisConstants.PARAM_CREATED_BY, currentUserId);
+                    }
+                    if (paramMap.containsKey(MyBatisConstants.PARAM_UPDATED_BY)) {
+                        paramMap.putIfAbsent(MyBatisConstants.PARAM_UPDATED_BY, currentUserId);
+                    }
+                } else {
+                    config = auditingConfigMap.computeIfAbsent(clazz, this::extractConfig);
+                    fillFields(mappedStatement, config, arg);
                 }
-                Object currentUserId = currentUserExtractor.getCurrentUserId();
-                if (paramMap.containsKey(MyBatisConstants.PARAM_CREATED_BY)) {
-                    paramMap.putIfAbsent(MyBatisConstants.PARAM_CREATED_BY, currentUserId);
-                }
-                if (paramMap.containsKey(MyBatisConstants.PARAM_UPDATED_BY)) {
-                    paramMap.putIfAbsent(MyBatisConstants.PARAM_UPDATED_BY, currentUserId);
-                }
-            } else {
-                config = auditingConfigMap.computeIfAbsent(clazz, this::extractConfig);
-                fillFields(mappedStatement, config, arg);
             }
         }
-
         return invocation.proceed();
     }
 
