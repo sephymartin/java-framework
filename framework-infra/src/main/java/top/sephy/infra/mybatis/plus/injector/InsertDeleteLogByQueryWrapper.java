@@ -17,6 +17,7 @@ package top.sephy.infra.mybatis.plus.injector;
 
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 
+@Deprecated
 public class InsertDeleteLogByQueryWrapper extends AbstractInsertDeleteLog {
 
     public InsertDeleteLogByQueryWrapper() {

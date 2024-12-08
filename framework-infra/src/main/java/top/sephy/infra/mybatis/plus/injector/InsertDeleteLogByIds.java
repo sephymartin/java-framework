@@ -19,6 +19,7 @@ import java.io.Serial;
 
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 
+@Deprecated
 public class InsertDeleteLogByIds extends AbstractInsertDeleteLog {
 
     @Serial

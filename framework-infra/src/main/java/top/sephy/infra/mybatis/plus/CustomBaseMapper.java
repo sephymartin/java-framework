@@ -29,6 +29,7 @@ import com.github.pagehelper.PageHelper;
 import lombok.NonNull;
 import top.sephy.infra.entity.DeleteLog;
 import top.sephy.infra.mybatis.MyBatisConstants;
+import top.sephy.infra.mybatis.plus.intercepter.DeleteLogInterceptor;
 
 /**
  * @author sephy
@@ -60,9 +61,16 @@ public interface CustomBaseMapper<T> extends BaseMapper<T> {
      * @param entityList
      * @return
      */
-    int insertAllColumnList(@Param("entityList") Collection<T> entityList);
+    @Deprecated
+    default int insertAllColumnList(@Param("entityList") Collection<T> entityList) {
+        return this.batchInsertAllColumn(entityList);
+    }
+
+    int batchInsertAllColumn(@Param("entityList") Collection<T> entityList);
 
     int alwaysUpdateSomeColumnById(@Param(Constants.ENTITY) T entity);
+
+    int batchUpdateById(@Param("entityList") Collection<T> entityList);
 
     /**
      * 查询全表
@@ -73,26 +81,28 @@ public interface CustomBaseMapper<T> extends BaseMapper<T> {
         return PageHelper.offsetPage(0, 10000).doSelectPage(() -> this.selectList(Wrappers.emptyWrapper()));
     }
 
-    // default int deleteAndSaveDeleteLogById(@NonNull Serializable id) {
-    // T entity = this.selectById(id);
-    //
-    // if (entity != null) {
-    // DeleteLog deleteLog = new DeleteLog();
-    // deleteLog.setTableName(TableInfoHelper.getTableInfo(entity.getClass()).getTableName());
-    // if (id instanceof Long || id instanceof Integer) {
-    // deleteLog.setDataId((Long)id);
-    // }
-    // deleteLog.setDeleteContent(JacksonUtils.toJson(entity));
-    // this.insertDeleteLog(deleteLog);
-    // return this.deleteById(id);
-    // }
-    // return 0;
-    // }
-
+    /**
+     *
+     * @param deleteIds
+     * @param createdBy
+     * @param updatedBy
+     * @return
+     * @deprecated use {@link DeleteLogInterceptor} instead
+     */
+    @Deprecated
     int insertDeleteLogByIds(@Param("deleteIds") Collection<Long> deleteIds,
         @Param(value = MyBatisConstants.PARAM_CREATED_BY) Long createdBy,
         @Param(MyBatisConstants.PARAM_UPDATED_BY) Long updatedBy);
 
+    /**
+     *
+     * @param queryWrapper
+     * @param createdBy
+     * @param updatedBy
+     * @return
+     * @deprecated use {@link DeleteLogInterceptor} instead
+     */
+    @Deprecated
     int insertDeleteLogByQueryWrapper(@Param("ew") Wrapper<T> queryWrapper,
         @Param(value = MyBatisConstants.PARAM_CREATED_BY) Long createdBy,
         @Param(MyBatisConstants.PARAM_UPDATED_BY) Long updatedBy);
@@ -102,7 +112,9 @@ public interface CustomBaseMapper<T> extends BaseMapper<T> {
      * 
      * @param id
      * @return
+     * @deprecated use {@link DeleteLogInterceptor} instead
      */
+    @Deprecated
     default int deleteAndSaveDeleteLogById(@NonNull Long id) {
         this.insertDeleteLogByIds(List.of(id), null, null);
         return this.deleteById(id);
@@ -113,7 +125,9 @@ public interface CustomBaseMapper<T> extends BaseMapper<T> {
      *
      * @param ids
      * @return
+     * @deprecated use {@link DeleteLogInterceptor} instead
      */
+    @Deprecated
     default int deleteAndSaveDeleteLogByIds(@NonNull Collection<Long> ids) {
         DeleteLog deleteLog = new DeleteLog();
         deleteLog.setDeleteIds(ids);
@@ -126,7 +140,9 @@ public interface CustomBaseMapper<T> extends BaseMapper<T> {
      *
      * @param ids
      * @return
+     * @deprecated use {@link DeleteLogInterceptor} instead
      */
+    @Deprecated
     default int deleteAndSaveDeleteLogByQueryWrapper(@NonNull Wrapper<T> queryWrapper) {
         this.insertDeleteLogByQueryWrapper(queryWrapper, null, null);
         return this.delete(queryWrapper);

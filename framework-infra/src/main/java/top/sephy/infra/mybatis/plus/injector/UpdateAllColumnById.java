@@ -15,6 +15,7 @@
  */
 package top.sephy.infra.mybatis.plus.injector;
 
+import com.baomidou.mybatisplus.extension.injector.methods.AlwaysUpdateSomeColumnById;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlSource;
 
@@ -24,6 +25,7 @@ import com.baomidou.mybatisplus.core.metadata.TableInfo;
 
 /**
  * 根据ID更新所有字段
+ * @see {@link AlwaysUpdateSomeColumnById}
  */
 public class UpdateAllColumnById extends AbstractMethod {
 

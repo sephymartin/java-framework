@@ -27,6 +27,7 @@ import com.baomidou.mybatisplus.core.metadata.TableInfo;
 
 import top.sephy.infra.entity.DeleteLog;
 
+@Deprecated
 public class InsertDeleteLogById extends AbstractMethod {
 
     @Serial

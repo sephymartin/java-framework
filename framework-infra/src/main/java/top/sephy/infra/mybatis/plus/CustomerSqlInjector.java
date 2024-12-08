@@ -24,10 +24,9 @@ import com.baomidou.mybatisplus.extension.injector.methods.AlwaysUpdateSomeColum
 import com.baomidou.mybatisplus.extension.injector.methods.InsertBatchSomeColumn;
 import com.baomidou.mybatisplus.extension.injector.methods.Upsert;
 
+import top.sephy.infra.mybatis.plus.injector.BatchUpdateById;
 import top.sephy.infra.mybatis.plus.injector.InsertAllColumn;
-import top.sephy.infra.mybatis.plus.injector.InsertAllColumnList;
-import top.sephy.infra.mybatis.plus.injector.InsertDeleteLogByIds;
-import top.sephy.infra.mybatis.plus.injector.InsertDeleteLogByQueryWrapper;
+import top.sephy.infra.mybatis.plus.injector.BatchInsertAllColumn;
 
 /**
  * 添加Sql注入方法,支持批量插入
@@ -42,10 +41,9 @@ public class CustomerSqlInjector extends DefaultSqlInjector {
         List<AbstractMethod> methodList = super.getMethodList(mapperClass, tableInfo);
         methodList.add(new Upsert());
         methodList.add(new InsertAllColumn());
-        methodList.add(new InsertAllColumnList());
+        methodList.add(new BatchInsertAllColumn());
         methodList.add(new InsertBatchSomeColumn());
-        methodList.add(new InsertDeleteLogByIds());
-        methodList.add(new InsertDeleteLogByQueryWrapper());
+        methodList.add(new BatchUpdateById());
         // methodList.add(new UpdateAllColumnById());
         methodList.add(new AlwaysUpdateSomeColumnById());
         return methodList;

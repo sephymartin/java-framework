@@ -30,15 +30,16 @@ import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.toolkit.sql.SqlScriptUtils;
 
-public class InsertAllColumnList extends AbstractMethod {
+public class BatchInsertAllColumn extends AbstractMethod {
 
     @Serial
     private static final long serialVersionUID = 8070883928677567740L;
-    public static String METHOD = "insertAllColumnList";
+
+    public static String METHOD = "batchInsertAllColumn";
 
     public static String SQL = "<script>\nINSERT INTO %s %s VALUES %s\n</script>";
 
-    public InsertAllColumnList() {
+    public BatchInsertAllColumn() {
         this(METHOD);
     }
 
@@ -46,7 +47,7 @@ public class InsertAllColumnList extends AbstractMethod {
      * @param name 方法名
      * @since 3.5.0
      */
-    public InsertAllColumnList(String name) {
+    public BatchInsertAllColumn(String name) {
         super(name);
     }
 
