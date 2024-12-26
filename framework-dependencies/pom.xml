@@ -46,6 +46,7 @@
         <commons-io.version>2.11.0</commons-io.version>
         <commons-math3.version>3.6.1</commons-math3.version>
 
+        <camunda.version>7.22.0</camunda.version>
         <dom4j.version>1.6.1</dom4j.version>
         <!--<commons-text.version>1.2</commons-text.version>-->
         <dubbo-spring-boot-starter.version>2.0.0</dubbo-spring-boot-starter.version>
@@ -134,7 +135,6 @@
 
     <dependencyManagement>
         <dependencies>
-
             <dependency>
                 <groupId>org.mybatis.spring.boot</groupId>
                 <artifactId>mybatis-spring-boot-autoconfigure</artifactId>
@@ -178,6 +178,14 @@
                 <scope>import</scope>
             </dependency>
 
+            <dependency>
+                <groupId>org.camunda.bpm</groupId>
+                <artifactId>camunda-bom</artifactId>
+                <version>${camunda.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+
             <!-- shardingsphere -->
             <!--
             <dependency>
@@ -192,6 +200,36 @@
                 <groupId>org.apache.shardingsphere</groupId>
                 <artifactId>shardingsphere-jdbc-core</artifactId>
                 <version>${shardingsphere.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.shardingsphere</groupId>
+                        <artifactId>shardingsphere-schedule-core</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.shardingsphere</groupId>
+                        <artifactId>shardingsphere-postgresql-dialect-exception</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.shardingsphere</groupId>
+                        <artifactId>shardingsphere-sql-parser-oracle</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.shardingsphere</groupId>
+                        <artifactId>shardingsphere-sql-parser-opengauss</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.shardingsphere</groupId>
+                        <artifactId>shardingsphere-sql-parser-postgresql</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.shardingsphere</groupId>
+                        <artifactId>shardingsphere-sql-parser-sql92</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.shardingsphere</groupId>
+                        <artifactId>shardingsphere-sql-parser-sqlserver</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>
@@ -259,6 +297,16 @@
                 <groupId>org.redisson</groupId>
                 <artifactId>redisson</artifactId>
                 <version>${redisson.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.objenesis</groupId>
+                        <artifactId>objenesis</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.commons</groupId>
+                        <artifactId>commons-collections4</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>
