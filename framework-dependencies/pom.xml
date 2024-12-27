@@ -46,7 +46,7 @@
         <commons-io.version>2.11.0</commons-io.version>
         <commons-math3.version>3.6.1</commons-math3.version>
 
-        <camunda.version>7.22.0</camunda.version>
+        <camunda.version>7.21.0</camunda.version>
         <dom4j.version>1.6.1</dom4j.version>
         <!--<commons-text.version>1.2</commons-text.version>-->
         <dubbo-spring-boot-starter.version>2.0.0</dubbo-spring-boot-starter.version>
