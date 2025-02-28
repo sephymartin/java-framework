@@ -115,6 +115,7 @@
         <eclipse-code-formatter.version>4.26</eclipse-code-formatter.version>
         <swagger-project-jakarta.version>2.2.8</swagger-project-jakarta.version>
 
+        <transmittable-thread-local.version>2.14.5</transmittable-thread-local.version>
         <weixin-java.version>4.5.0</weixin-java.version>
 
         <xxl-job.version>2.3.1</xxl-job.version>
@@ -627,6 +628,12 @@
                 <version>${yop-java-sdk-parent.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>transmittable-thread-local</artifactId>
+                <version>${transmittable-thread-local.version}</version>
             </dependency>
 
         </dependencies>
