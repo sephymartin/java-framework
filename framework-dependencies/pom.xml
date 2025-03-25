@@ -104,7 +104,6 @@
 
         <shardingsphere.version>5.4.1</shardingsphere.version>
         <skywalking.version>8.8.1</skywalking.version>
-        <sms4j.version>3.1.1</sms4j.version>
         <snakeyaml-version>2.0.0</snakeyaml-version>
         <spotless-maven-plugin.version>2.43.0</spotless-maven-plugin.version>
         <spring-boot-admin.version>2.6.5</spring-boot-admin.version>
@@ -596,12 +595,6 @@
                 <groupId>com.github.binarywang</groupId>
                 <artifactId>weixin-java-miniapp</artifactId>
                 <version>${weixin-java.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.dromara.sms4j</groupId>
-                <artifactId>sms4j-spring-boot-starter</artifactId>
-                <version>${sms4j.version}</version>
             </dependency>
 
             <dependency>
