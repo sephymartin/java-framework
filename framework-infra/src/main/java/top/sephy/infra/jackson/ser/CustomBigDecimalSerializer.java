@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 sephy.top
+ * Copyright 2022-2025 sephy.top
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,7 +67,7 @@ public class CustomBigDecimalSerializer extends StdSerializer<BigDecimal> implem
 
     @Override
     public JsonSerializer<?> createContextual(SerializerProvider prov, BeanProperty property)
-        throws JsonMappingException {
+            throws JsonMappingException {
         JsonFormat.Value format = findFormatOverrides(prov, property, handledType());
         if (format == null) {
             return this;
@@ -84,7 +84,7 @@ public class CustomBigDecimalSerializer extends StdSerializer<BigDecimal> implem
 
     @Override
     protected JsonFormat.Value findFormatOverrides(SerializerProvider provider, BeanProperty prop,
-        Class<?> typeForDefaults) {
+            Class<?> typeForDefaults) {
         if (prop != null) {
             return prop.findPropertyFormat(provider.getConfig(), typeForDefaults);
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 sephy.top
+ * Copyright 2022-2025 sephy.top
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ public abstract class AbstractXSSDeserializer extends StdDeserializer<String> im
 
     @Override
     public JsonDeserializer<?> createContextual(DeserializationContext ctxt, BeanProperty property)
-        throws JsonMappingException {
+            throws JsonMappingException {
 
         if (property != null) {
             XSSIgnore annotation = property.getAnnotation(XSSIgnore.class);
@@ -55,5 +55,5 @@ public abstract class AbstractXSSDeserializer extends StdDeserializer<String> im
     }
 
     protected abstract String doDeserialize(JsonParser p, DeserializationContext ctxt)
-        throws IOException, JacksonException;
+            throws IOException, JacksonException;
 }

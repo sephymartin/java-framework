@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 sephy.top
+ * Copyright 2022-2025 sephy.top
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,24 +63,26 @@ public abstract class JacksonUtils {
     static {
         ClassLoader classLoader = JacksonUtils.class.getClassLoader();
         // javaTimeModulePresent =
-        // ClassUtils.isPresent("com.fasterxml.jackson.datatype.jsr310.JavaTimeModule", classLoader);
+        // ClassUtils.isPresent("com.fasterxml.jackson.datatype.jsr310.JavaTimeModule",
+        // classLoader);
         playwrightModulePresent = ClassUtils.isPresent("com.microsoft.playwright.Playwright", classLoader);
         DEFAULT_OBJECT_MAPPER_INCLUDE_NULL = newDefaultObjectMapper();
         DEFAULT_OBJECT_MAPPER_INCLUDE_NULL.setSerializationInclusion(JsonInclude.Include.ALWAYS);
     }
 
-    private static TypeReference<HashMap<String, String>> STRING_MAP = new TypeReference<HashMap<String, String>>() {};
+    private static TypeReference<HashMap<String, String>> STRING_MAP = new TypeReference<HashMap<String, String>>() {
+    };
 
     public static ObjectMapper newDefaultObjectMapper() {
 
         Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder()
-            .serializerByType(LocalDateTime.class, CustomLocalDateTimeSerializer.INSTANCE)
-            .deserializerByType(LocalDateTime.class, CustomLocalDateTimeDeserializer.INSTANCE)
-            .serializerByType(BigDecimal.class, CustomBigDecimalSerializer.INSTANCE)
-            .serializerByType(LocalDate.class, CustomLocalDateSerializer.INSTANCE)
-            .deserializerByType(LocalDate.class, CustomLocalDateDeserializer.INSTANCE)
-            .serializerByType(Long.class, new HashIdSerializer(new Hashids()))
-            .deserializerByType(Long.class, new HashIdDeserializer(new Hashids()));
+                .serializerByType(LocalDateTime.class, CustomLocalDateTimeSerializer.INSTANCE)
+                .deserializerByType(LocalDateTime.class, CustomLocalDateTimeDeserializer.INSTANCE)
+                .serializerByType(BigDecimal.class, CustomBigDecimalSerializer.INSTANCE)
+                .serializerByType(LocalDate.class, CustomLocalDateSerializer.INSTANCE)
+                .deserializerByType(LocalDate.class, CustomLocalDateDeserializer.INSTANCE)
+                .serializerByType(Long.class, new HashIdSerializer(new Hashids()))
+                .deserializerByType(Long.class, new HashIdDeserializer(new Hashids()));
         if (playwrightModulePresent) {
             builder.modules(new PlaywrightModule());
         }
@@ -97,7 +99,8 @@ public abstract class JacksonUtils {
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
     }
 
-    private static void enableFeatures(ObjectMapper objectMapper) {}
+    private static void enableFeatures(ObjectMapper objectMapper) {
+    }
 
     public static String toJson(Object object) {
         return toJson(DEFAULT_OBJECT_MAPPER, object);
@@ -159,7 +162,7 @@ public abstract class JacksonUtils {
         assertObjectMapper(objectMapper);
         try {
             return objectMapper.readValue(json,
-                objectMapper.getTypeFactory().constructCollectionType(List.class, clazz));
+                    objectMapper.getTypeFactory().constructCollectionType(List.class, clazz));
             // return objectMapper.readValue(json, new TypeReference<List<T>>() {
             // });
         } catch (Exception e) {
@@ -244,7 +247,8 @@ public abstract class JacksonUtils {
 
         private static long serialVersionUID = -8318031819390714507L;
 
-        public JsonException() {}
+        public JsonException() {
+        }
 
         public JsonException(String message) {
             super(message);

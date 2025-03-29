@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 sephy.top
+ * Copyright 2022-2025 sephy.top
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ public class NamedThreadFactory implements ThreadFactory {
 
     /**
      *
-     * @param prefix 线程名前缀
+     * @param prefix   线程名前缀
      * @param isDaemon 是否守护线程
      */
     public NamedThreadFactory(String prefix, boolean isDaemon) {
@@ -44,9 +44,9 @@ public class NamedThreadFactory implements ThreadFactory {
 
     /**
      *
-     * @param prefix 线程名前缀
+     * @param prefix      线程名前缀
      * @param threadGroup 线程组，可以为null
-     * @param isDaemon 是否守护线程
+     * @param isDaemon    是否守护线程
      */
     public NamedThreadFactory(String prefix, ThreadGroup threadGroup, boolean isDaemon) {
         this(prefix, threadGroup, isDaemon, null);
@@ -54,13 +54,13 @@ public class NamedThreadFactory implements ThreadFactory {
 
     /**
      *
-     * @param prefix 线程名前缀
+     * @param prefix      线程名前缀
      * @param threadGroup 线程组，可以为null
-     * @param isDaemon 是否守护线程
-     * @param handler 未捕获异常处理
+     * @param isDaemon    是否守护线程
+     * @param handler     未捕获异常处理
      */
     public NamedThreadFactory(String prefix, ThreadGroup threadGroup, boolean isDaemon,
-        Thread.UncaughtExceptionHandler handler) {
+            Thread.UncaughtExceptionHandler handler) {
         this.prefix = StringUtils.isBlank(prefix) ? "Named-thread" : prefix;
         if (null == threadGroup) {
             threadGroup = Thread.currentThread().getThreadGroup();

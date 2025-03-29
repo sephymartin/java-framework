@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 sephy.top
+ * Copyright 2022-2025 sephy.top
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import top.sephy.infra.mybatis.query.IgnoreQuery;
 
+/**
+ * 分页查找对象
+ */
 @Data
 public class PagingQuery {
 

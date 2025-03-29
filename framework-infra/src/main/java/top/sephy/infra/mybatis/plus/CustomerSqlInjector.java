@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 sephy.top
+ * Copyright 2022-2025 sephy.top
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,9 +24,9 @@ import com.baomidou.mybatisplus.extension.injector.methods.AlwaysUpdateSomeColum
 import com.baomidou.mybatisplus.extension.injector.methods.InsertBatchSomeColumn;
 import com.baomidou.mybatisplus.extension.injector.methods.Upsert;
 
+import top.sephy.infra.mybatis.plus.injector.BatchInsertAllColumn;
 import top.sephy.infra.mybatis.plus.injector.BatchUpdateById;
 import top.sephy.infra.mybatis.plus.injector.InsertAllColumn;
-import top.sephy.infra.mybatis.plus.injector.BatchInsertAllColumn;
 
 /**
  * 添加Sql注入方法,支持批量插入

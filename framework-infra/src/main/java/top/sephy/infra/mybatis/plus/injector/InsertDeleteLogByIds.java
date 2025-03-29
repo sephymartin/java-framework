@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 sephy.top
+ * Copyright 2022-2025 sephy.top
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,11 +27,11 @@ public class InsertDeleteLogByIds extends AbstractInsertDeleteLog {
     public static String METHOD = "insertDeleteLogByIds";
 
     public static String WHERE_EXPRESSION = """
-        WHERE %s in
-        <foreach collection="deleteIds" item="_deleteId" open="(" separator="," close=")">
-            #{_deleteId}
-        </foreach>
-        """;
+            WHERE %s in
+            <foreach collection="deleteIds" item="_deleteId" open="(" separator="," close=")">
+                #{_deleteId}
+            </foreach>
+            """;
 
     public InsertDeleteLogByIds() {
         super(METHOD);

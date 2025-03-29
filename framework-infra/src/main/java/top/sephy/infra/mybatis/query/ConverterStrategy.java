@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 sephy.top
+ * Copyright 2022-2025 sephy.top
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ public enum ConverterStrategy implements Converter {
         @Override
         public Object convert(Object val) {
             if (val instanceof String) {
-                return StringUtils.trimToNull((String)val);
+                return StringUtils.trimToNull((String) val);
             }
             return val;
         }
@@ -59,10 +59,10 @@ public enum ConverterStrategy implements Converter {
         @Override
         public Object convert(Object val) {
             if (val instanceof String) {
-                if (StringUtils.isBlank((String)val)) {
+                if (StringUtils.isBlank((String) val)) {
                     return null;
                 }
-                return "%" + (String)val;
+                return "%" + (String) val;
             }
             return val;
         }
@@ -75,7 +75,7 @@ public enum ConverterStrategy implements Converter {
         @Override
         public Object convert(Object val) {
             if (val instanceof String) {
-                if (StringUtils.isBlank((String)val)) {
+                if (StringUtils.isBlank((String) val)) {
                     return null;
                 }
                 return val + "%";
@@ -91,10 +91,10 @@ public enum ConverterStrategy implements Converter {
         @Override
         public Object convert(Object val) {
             if (val instanceof String) {
-                if (StringUtils.isBlank((String)val)) {
+                if (StringUtils.isBlank((String) val)) {
                     return null;
                 }
-                return "%" + (String)val + "%";
+                return "%" + (String) val + "%";
             }
             return val;
         }
@@ -107,16 +107,16 @@ public enum ConverterStrategy implements Converter {
             }
             LocalDateTime localDateTime = null;
             if (val instanceof Date) {
-                localDateTime = DateTimeUtils.toLocalDateTime((Date)val);
+                localDateTime = DateTimeUtils.toLocalDateTime((Date) val);
             } else if (val instanceof Long) {
-                localDateTime = DateTimeUtils.toLocalDateTime(new Date((Long)val));
+                localDateTime = DateTimeUtils.toLocalDateTime(new Date((Long) val));
             } else if (val instanceof LocalDateTime) {
-                localDateTime = (LocalDateTime)val;
+                localDateTime = (LocalDateTime) val;
             } else if (val instanceof LocalDate) {
-                localDateTime = ((LocalDate)val).atStartOfDay();
+                localDateTime = ((LocalDate) val).atStartOfDay();
             } else {
                 throw new IllegalArgumentException(
-                    "不支持 " + val.getClass().getCanonicalName() + " 到 java.lang.Date 的类型转换");
+                        "不支持 " + val.getClass().getCanonicalName() + " 到 java.lang.Date 的类型转换");
             }
             return localDateTime;
         }
@@ -133,16 +133,16 @@ public enum ConverterStrategy implements Converter {
             }
             LocalDateTime localDateTime = null;
             if (val instanceof Date) {
-                localDateTime = DateTimeUtils.toLocalDateTime((Date)val);
+                localDateTime = DateTimeUtils.toLocalDateTime((Date) val);
             } else if (val instanceof Long) {
-                localDateTime = DateTimeUtils.toLocalDateTime(new Date((Long)val));
+                localDateTime = DateTimeUtils.toLocalDateTime(new Date((Long) val));
             } else if (val instanceof LocalDateTime) {
-                localDateTime = (LocalDateTime)val;
+                localDateTime = (LocalDateTime) val;
             } else if (val instanceof LocalDate) {
-                localDateTime = ((LocalDate)val).atStartOfDay();
+                localDateTime = ((LocalDate) val).atStartOfDay();
             } else {
                 throw new IllegalArgumentException(
-                    "不支持 " + val.getClass().getCanonicalName() + " 到 java.lang.Date 的类型转换");
+                        "不支持 " + val.getClass().getCanonicalName() + " 到 java.lang.Date 的类型转换");
             }
             return localDateTime.with(LocalTime.MAX);
         }
@@ -159,16 +159,16 @@ public enum ConverterStrategy implements Converter {
             }
             LocalDateTime localDateTime = null;
             if (val instanceof Date) {
-                localDateTime = DateTimeUtils.toLocalDateTime((Date)val);
+                localDateTime = DateTimeUtils.toLocalDateTime((Date) val);
             } else if (val instanceof Long) {
-                localDateTime = DateTimeUtils.toLocalDateTime(new Date((Long)val));
+                localDateTime = DateTimeUtils.toLocalDateTime(new Date((Long) val));
             } else if (val instanceof LocalDateTime) {
-                localDateTime = (LocalDateTime)val;
+                localDateTime = (LocalDateTime) val;
             } else if (val instanceof LocalDate) {
-                localDateTime = ((LocalDate)val).atStartOfDay();
+                localDateTime = ((LocalDate) val).atStartOfDay();
             } else {
                 throw new IllegalArgumentException(
-                    "不支持 " + val.getClass().getCanonicalName() + " 到 java.lang.Date 的类型转换");
+                        "不支持 " + val.getClass().getCanonicalName() + " 到 java.lang.Date 的类型转换");
             }
             return localDateTime.with(LocalTime.MIN);
         }
@@ -178,9 +178,9 @@ public enum ConverterStrategy implements Converter {
         @Override
         public Object convert(Object val) {
             if (val instanceof Date) {
-                return Integer.valueOf(new SimpleDateFormat("yyyyMMdd").format((Date)val));
+                return Integer.valueOf(new SimpleDateFormat("yyyyMMdd").format((Date) val));
             } else if (val instanceof Long) {
-                return Integer.valueOf(new SimpleDateFormat("yyyyMMdd").format(new Date((Long)val)));
+                return Integer.valueOf(new SimpleDateFormat("yyyyMMdd").format(new Date((Long) val)));
             }
             return null;
         }

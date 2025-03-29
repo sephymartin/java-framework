@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 sephy.top
+ * Copyright 2022-2025 sephy.top
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ import top.sephy.infra.mybatis.audit.annotaton.ModifiedTime;
 import top.sephy.infra.mybatis.audit.annotaton.ModifierId;
 import top.sephy.infra.mybatis.audit.annotaton.ModifierName;
 
-@Intercepts({@Signature(type = Executor.class, method = "update", args = {MappedStatement.class, Object.class})})
+@Intercepts({ @Signature(type = Executor.class, method = "update", args = { MappedStatement.class, Object.class }) })
 public class AutoFillInterceptor implements Interceptor {
 
     private ConcurrentHashMap<Class<?>, AuditingConfig> auditingConfigMap = new ConcurrentHashMap<>();
@@ -64,7 +64,7 @@ public class AutoFillInterceptor implements Interceptor {
     public Object intercept(Invocation invocation) throws Throwable {
         Object[] args = invocation.getArgs();
 
-        MappedStatement mappedStatement = (MappedStatement)args[0];
+        MappedStatement mappedStatement = (MappedStatement) args[0];
 
         if (args.length > 1) {
             Object arg = args[1];
@@ -73,7 +73,8 @@ public class AutoFillInterceptor implements Interceptor {
                 AuditingConfig config = null;
 
                 // 如果是集合类型, 取第一个元素的类型
-                // mybatis 针对多参数，或者单个参数是Collection和Array 参数包装成MapperMethod.ParamMap（HashMap）,否则参数类型直接返回所传当前参数，
+                // mybatis 针对多参数，或者单个参数是Collection和Array
+                // 参数包装成MapperMethod.ParamMap（HashMap）,否则参数类型直接返回所传当前参数，
                 // 可看org.apache.ibatis.reflection.ParamNameResolver.wrapToMapIfCollection
                 if (MapperMethod.ParamMap.class.isAssignableFrom(clazz)) {
                     MapperMethod.ParamMap<Object> paramMap = (MapperMethod.ParamMap<Object>) arg;
@@ -132,7 +133,7 @@ public class AutoFillInterceptor implements Interceptor {
             Field modifierIdField = config.getModifierIdField();
             Field modifierNameField = config.getModifierNameField();
             if (creatorIdField != null && creatorNameField != null || modifierIdField != null
-                || modifierNameField != null) {
+                    || modifierNameField != null) {
 
                 Object currentUserId = currentUserExtractor.getCurrentUserId();
                 Object currentUserName = currentUserExtractor.getCurrentUserName();
@@ -169,7 +170,7 @@ public class AutoFillInterceptor implements Interceptor {
         String name = field.getName();
         if (beanWrapper.getPropertyValue(name) == null) {
             if (field.getType() != value.getClass()
-                && conversionService.canConvert(value.getClass(), field.getType())) {
+                    && conversionService.canConvert(value.getClass(), field.getType())) {
                 value = conversionService.convert(value, field.getType());
             }
             beanWrapper.setPropertyValue(name, value);

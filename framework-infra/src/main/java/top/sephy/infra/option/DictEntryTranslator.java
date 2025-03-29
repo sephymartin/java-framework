@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 sephy.top
+ * Copyright 2022-2025 sephy.top
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ public class DictEntryTranslator {
                     Object keyPropertyValue = beanWrapper.getPropertyValue(keyFieldName);
                     if (keyPropertyValue != null) {
                         Object value = optionProvider.option(type, keyPropertyValue, meta.isCompareWithString(),
-                            meta.isCaseSensitive());
+                                meta.isCaseSensitive());
                         if (value != null) {
                             beanWrapper.setPropertyValue(valueFieldName, value);
                         } else {

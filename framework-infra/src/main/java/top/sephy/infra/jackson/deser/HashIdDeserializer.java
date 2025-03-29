@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 sephy.top
+ * Copyright 2022-2025 sephy.top
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ public class HashIdDeserializer extends StdDeserializer<Long> implements Context
 
     @Override
     public JsonDeserializer<?> createContextual(DeserializationContext ctxt, BeanProperty property)
-        throws JsonMappingException {
+            throws JsonMappingException {
         JsonHashId jsonHashId = property.getAnnotation(JsonHashId.class);
         if (jsonHashId != null) {
             String salt = jsonHashId.salt();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 sephy.top
+ * Copyright 2022-2025 sephy.top
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 
 public abstract class AbstractComaStringCollectionHandler<E extends Serializable, T extends Collection<E>>
-    extends BaseTypeHandler<T> {
+        extends BaseTypeHandler<T> {
 
     static String DELIMITER = ",";
 
@@ -40,7 +40,7 @@ public abstract class AbstractComaStringCollectionHandler<E extends Serializable
             val = "";
         } else {
             val = parameter.stream().filter(Objects::nonNull).map(String::valueOf).filter(StringUtils::isNoneBlank)
-                .collect(Collectors.joining(DELIMITER));
+                    .collect(Collectors.joining(DELIMITER));
         }
         ps.setString(i, val);
     }

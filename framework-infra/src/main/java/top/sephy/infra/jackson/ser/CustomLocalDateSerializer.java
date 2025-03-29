@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 sephy.top
+ * Copyright 2022-2025 sephy.top
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,8 +34,8 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 public class CustomLocalDateSerializer extends StdSerializer<LocalDate> implements ContextualSerializer {
     private static final long serialVersionUID = -3352134288289600043L;
 
-    public static final CustomLocalDateSerializer INSTANCE =
-        new CustomLocalDateSerializer(null, null, JsonFormat.Shape.NUMBER_INT);
+    public static final CustomLocalDateSerializer INSTANCE = new CustomLocalDateSerializer(null, null,
+            JsonFormat.Shape.NUMBER_INT);
 
     private final Boolean _useTimestamp;
 
@@ -52,7 +52,7 @@ public class CustomLocalDateSerializer extends StdSerializer<LocalDate> implemen
 
     @Override
     public JsonSerializer<?> createContextual(SerializerProvider prov, BeanProperty property)
-        throws JsonMappingException {
+            throws JsonMappingException {
         JsonFormat.Value format = findFormatOverrides(prov, property, handledType());
         if (format != null) {
             Boolean useTimestamp = null;
@@ -86,11 +86,12 @@ public class CustomLocalDateSerializer extends StdSerializer<LocalDate> implemen
 
     @Override
     protected JsonFormat.Value findFormatOverrides(SerializerProvider provider, BeanProperty prop,
-        Class<?> typeForDefaults) {
+            Class<?> typeForDefaults) {
         if (prop != null) {
             return prop.findPropertyFormat(provider.getConfig(), typeForDefaults);
         }
-        // even without property or AnnotationIntrospector, may have type-specific defaults
+        // even without property or AnnotationIntrospector, may have type-specific
+        // defaults
         return provider.getDefaultPropertyFormat(typeForDefaults);
     }
 
@@ -103,8 +104,10 @@ public class CustomLocalDateSerializer extends StdSerializer<LocalDate> implemen
         } else {
             dtf = DateTimeFormatter.ofPattern(pattern, locale);
         }
-        // Issue #69: For instant serializers/deserializers we need to configure the formatter with
-        // a time zone picked up from JsonFormat annotation, otherwise serialization might not work
+        // Issue #69: For instant serializers/deserializers we need to configure the
+        // formatter with
+        // a time zone picked up from JsonFormat annotation, otherwise serialization
+        // might not work
         if (format.hasTimeZone()) {
             dtf = dtf.withZone(format.getTimeZone().toZoneId());
         }

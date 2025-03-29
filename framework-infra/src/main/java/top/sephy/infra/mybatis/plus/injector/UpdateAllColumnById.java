@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 sephy.top
+ * Copyright 2022-2025 sephy.top
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,17 @@
  */
 package top.sephy.infra.mybatis.plus.injector;
 
-import com.baomidou.mybatisplus.extension.injector.methods.AlwaysUpdateSomeColumnById;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlSource;
 
 import com.baomidou.mybatisplus.core.enums.SqlMethod;
 import com.baomidou.mybatisplus.core.injector.AbstractMethod;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
+import com.baomidou.mybatisplus.extension.injector.methods.AlwaysUpdateSomeColumnById;
 
 /**
  * 根据ID更新所有字段
+ * 
  * @see {@link AlwaysUpdateSomeColumnById}
  */
 public class UpdateAllColumnById extends AbstractMethod {
@@ -38,8 +39,8 @@ public class UpdateAllColumnById extends AbstractMethod {
         SqlMethod sqlMethod = SqlMethod.UPDATE_BY_ID;
         final String additional = optlockVersion(tableInfo) + tableInfo.getLogicDeleteSql(true, true);
         String sql = String.format(sqlMethod.getSql(), tableInfo.getTableName(),
-            sqlSet(tableInfo.isWithLogicDelete(), false, tableInfo, false, ENTITY, ENTITY_DOT),
-            tableInfo.getKeyColumn(), ENTITY_DOT + tableInfo.getKeyProperty(), additional);
+                sqlSet(tableInfo.isWithLogicDelete(), false, tableInfo, false, ENTITY, ENTITY_DOT),
+                tableInfo.getKeyColumn(), ENTITY_DOT + tableInfo.getKeyProperty(), additional);
         SqlSource sqlSource = super.createSqlSource(configuration, sql, modelClass);
         return addUpdateMappedStatement(mapperClass, modelClass, methodName, sqlSource);
     }

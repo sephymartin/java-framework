@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 sephy.top
+ * Copyright 2022-2025 sephy.top
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package top.sephy.infra.jackson.annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 
-@Target({ElementType.FIELD})
+@Target({ ElementType.FIELD })
 public @interface XSSIgnore {
 
     boolean ignore() default true;

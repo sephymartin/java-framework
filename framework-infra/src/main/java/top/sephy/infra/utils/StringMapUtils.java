@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 sephy.top
+ * Copyright 2022-2025 sephy.top
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,12 +32,12 @@ public abstract class StringMapUtils {
     }
 
     public static String joinString(Map<String, String> map, String delimiter, String connector,
-        Set<String> excludeKeys) {
+            Set<String> excludeKeys) {
         return joinString(map, delimiter, connector, excludeKeys, true, true);
     }
 
     public static String joinString(Map<String, String> map, String delimiter, String connector,
-        Set<String> excludeKeys, boolean excludeEmptyValue, boolean sort) {
+            Set<String> excludeKeys, boolean excludeEmptyValue, boolean sort) {
         boolean excludeKey = (excludeKeys != null && !excludeKeys.isEmpty());
         Map<String, String> tmpMap = map;
         if (sort) {

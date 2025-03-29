@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 sephy.top
+ * Copyright 2022-2025 sephy.top
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,11 +35,11 @@ public class AuthenticationInfoResolver implements HandlerMethodArgumentResolver
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-        NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+            NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         Authentication annotation = parameter.getParameterAnnotation(Authentication.class);
 
-        org.springframework.security.core.Authentication authentication =
-            SecurityContextHolder.getContext().getAuthentication();
+        org.springframework.security.core.Authentication authentication = SecurityContextHolder.getContext()
+                .getAuthentication();
 
         Object value = null;
         if (authentication != null) {

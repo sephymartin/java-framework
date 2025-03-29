@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 sephy.top
+ * Copyright 2022-2025 sephy.top
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@ package top.sephy.infra.jackson.ser;
 
 import java.io.IOException;
 
-import com.fasterxml.jackson.databind.ser.std.NumberSerializers;
 import org.hashids.Hashids;
 
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -26,7 +25,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.ContextualSerializer;
-import com.fasterxml.jackson.databind.ser.std.StdKeySerializers;
+import com.fasterxml.jackson.databind.ser.std.NumberSerializers;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
 import lombok.NonNull;
@@ -52,8 +51,8 @@ public class HashIdSerializer extends StdSerializer<Long> implements ContextualS
 
     @Override
     public JsonSerializer<?> createContextual(SerializerProvider prov, BeanProperty property)
-        throws JsonMappingException {
-        if (property != null ) {
+            throws JsonMappingException {
+        if (property != null) {
             JsonHashId jsonHashId = property.getAnnotation(JsonHashId.class);
             if (jsonHashId != null) {
                 String salt = jsonHashId.salt();

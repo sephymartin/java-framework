@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 sephy.top
+ * Copyright 2022-2025 sephy.top
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,32 +54,32 @@ public class BatchInsertAllColumn extends AbstractMethod {
     @Override
     public MappedStatement injectMappedStatement(Class<?> mapperClass, Class<?> modelClass, TableInfo tableInfo) {
 
-        String columnScript =
-            SqlScriptUtils.convertTrim(getAllInsertSqlColumn(tableInfo), LEFT_BRACKET, RIGHT_BRACKET, null, COMMA);
+        String columnScript = SqlScriptUtils.convertTrim(getAllInsertSqlColumn(tableInfo), LEFT_BRACKET, RIGHT_BRACKET,
+                null, COMMA);
 
         String prefix = "_item";
 
         String singleValueScript = SqlScriptUtils.convertTrim(getAllInsertSqlProperty(tableInfo, prefix + DOT),
-            LEFT_BRACKET, RIGHT_BRACKET, null, COMMA) + NEWLINE;
+                LEFT_BRACKET, RIGHT_BRACKET, null, COMMA) + NEWLINE;
 
         String valuesScript = SqlScriptUtils.convertForeach(singleValueScript, "entityList", null, prefix, COMMA);
 
         String sql = String.format(SQL, tableInfo.getTableName(), columnScript, valuesScript);
         SqlSource sqlSource = super.createSqlSource(configuration, sql, modelClass);
         return this.addInsertMappedStatement(mapperClass, modelClass, methodName, sqlSource, NoKeyGenerator.INSTANCE,
-            tableInfo.getKeyProperty(), tableInfo.getKeyColumn());
+                tableInfo.getKeyProperty(), tableInfo.getKeyColumn());
     }
 
     String getAllInsertSqlColumn(TableInfo tableInfo) {
         List<TableFieldInfo> fieldList = tableInfo.getFieldList();
         return tableInfo.getKeyColumn() + COMMA + NEWLINE + fieldList.stream().map(TableFieldInfo::getInsertSqlColumn)
-            .filter(Objects::nonNull).collect(joining(NEWLINE));
+                .filter(Objects::nonNull).collect(joining(NEWLINE));
     }
 
     String getAllInsertSqlProperty(TableInfo tableInfo, String prefix) {
         List<TableFieldInfo> fieldList = tableInfo.getFieldList();
         return SqlScriptUtils.safeParam(prefix + tableInfo.getKeyProperty()) + COMMA + NEWLINE + fieldList.stream()
-            .map(i -> getInsertSqlProperty(i, prefix)).filter(Objects::nonNull).collect(joining(NEWLINE));
+                .map(i -> getInsertSqlProperty(i, prefix)).filter(Objects::nonNull).collect(joining(NEWLINE));
     }
 
     String getInsertSqlProperty(TableFieldInfo fieldInfo, final String prefix) {

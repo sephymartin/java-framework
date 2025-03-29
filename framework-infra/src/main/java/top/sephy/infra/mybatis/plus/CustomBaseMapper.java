@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 sephy.top
+ * Copyright 2022-2025 sephy.top
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -91,8 +91,8 @@ public interface CustomBaseMapper<T> extends BaseMapper<T> {
      */
     @Deprecated
     int insertDeleteLogByIds(@Param("deleteIds") Collection<Long> deleteIds,
-        @Param(value = MyBatisConstants.PARAM_CREATED_BY) Long createdBy,
-        @Param(MyBatisConstants.PARAM_UPDATED_BY) Long updatedBy);
+            @Param(value = MyBatisConstants.PARAM_CREATED_BY) Long createdBy,
+            @Param(MyBatisConstants.PARAM_UPDATED_BY) Long updatedBy);
 
     /**
      *
@@ -104,8 +104,8 @@ public interface CustomBaseMapper<T> extends BaseMapper<T> {
      */
     @Deprecated
     int insertDeleteLogByQueryWrapper(@Param("ew") Wrapper<T> queryWrapper,
-        @Param(value = MyBatisConstants.PARAM_CREATED_BY) Long createdBy,
-        @Param(MyBatisConstants.PARAM_UPDATED_BY) Long updatedBy);
+            @Param(value = MyBatisConstants.PARAM_CREATED_BY) Long createdBy,
+            @Param(MyBatisConstants.PARAM_UPDATED_BY) Long updatedBy);
 
     /**
      * 物理删除前先插入删除日志

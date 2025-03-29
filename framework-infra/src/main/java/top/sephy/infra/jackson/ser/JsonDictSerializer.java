@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 sephy.top
+ * Copyright 2022-2025 sephy.top
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ public class JsonDictSerializer extends StdSerializer<Object> {
     private final ConversionService conversionService;
 
     public JsonDictSerializer(@NonNull DictEntryProvider<Object, Object> dictEntryProvider,
-        @NonNull JsonDictMeta jsonDictMeta, @NonNull ConversionService conversionService) {
+            @NonNull JsonDictMeta jsonDictMeta, @NonNull ConversionService conversionService) {
         super(Object.class);
         this.dictEntryProvider = dictEntryProvider;
         this.jsonDictMeta = jsonDictMeta;
@@ -61,14 +61,14 @@ public class JsonDictSerializer extends StdSerializer<Object> {
 
         // 数组或者集合类型, 需要逐个输出
         if (value instanceof Collection<?>) {
-            Collection<?> collection = (Collection<?>)value;
+            Collection<?> collection = (Collection<?>) value;
             writeArray(gen, collection.toArray(), annotation, defaultLabelVal);
         } else if (value instanceof Object[]) {
-            Object[] objects = (Object[])value;
+            Object[] objects = (Object[]) value;
             writeArray(gen, objects, annotation, defaultLabelVal);
         } else {
             DictEntry<Object, Object> option = dictEntryProvider.option(annotation.type(), value,
-                annotation.compareWithString(), annotation.caseSensitive());
+                    annotation.compareWithString(), annotation.caseSensitive());
             Object val = option == null ? defaultLabelVal : option.getLabel();
             if (val == null) {
                 val = defaultLabelVal;
@@ -82,11 +82,11 @@ public class JsonDictSerializer extends StdSerializer<Object> {
     }
 
     private void writeArray(JsonGenerator gen, Object[] array, JsonDict annotation, Object defaultLabelVal)
-        throws IOException {
+            throws IOException {
         gen.writeStartArray();
         for (Object orig : array) {
             DictEntry<Object, Object> option = dictEntryProvider.option(annotation.type(), orig,
-                annotation.compareWithString(), annotation.caseSensitive());
+                    annotation.compareWithString(), annotation.caseSensitive());
             Object val = option == null ? defaultLabelVal : option.getLabel();
             if (val == null) {
                 val = defaultLabelVal;

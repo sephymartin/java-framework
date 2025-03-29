@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 sephy.top
+ * Copyright 2022-2025 sephy.top
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class CompositeCachedDictEntryProvider<K, V>
-    implements DictEntryProvider<K, V>, ApplicationListener<ContextRefreshedEvent> {
+        implements DictEntryProvider<K, V>, ApplicationListener<ContextRefreshedEvent> {
 
     private final ObjectProvider<List<DictEntryProvider<K, V>>> objectProvider;
 

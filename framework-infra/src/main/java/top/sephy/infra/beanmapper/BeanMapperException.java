@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 sephy.top
+ * Copyright 2022-2025 sephy.top
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,8 @@ public class BeanMapperException extends RuntimeException {
 
     private static final long serialVersionUID = 6950382237265823637L;
 
-    public BeanMapperException() {}
+    public BeanMapperException() {
+    }
 
     public BeanMapperException(String message) {
         super(message);

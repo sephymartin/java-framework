@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 sephy.top
+ * Copyright 2022-2025 sephy.top
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,11 +48,11 @@ public abstract class SpELUtils {
 
         String className = target.getClass().getName();
         final Signature signature = joinPoint.getSignature();
-        String[] paramNames = ((CodeSignature)signature).getParameterNames();
+        String[] paramNames = ((CodeSignature) signature).getParameterNames();
         String methodName = signature.getName();
         String contentKey = className + "#" + methodName;
         final Expression contentTemplate = EXPRESSION_CACHE.computeIfAbsent(contentKey,
-            k -> EXPRESSION_PARSER.parseExpression(template, PARSER_CONTEXT));
+                k -> EXPRESSION_PARSER.parseExpression(template, PARSER_CONTEXT));
 
         // 将方法参数添加到上下文中
         final Object[] paramValues = joinPoint.getArgs();

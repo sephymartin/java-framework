@@ -753,6 +753,9 @@
                                 <includes>
                                     <include>${basedir}/src/*/java/**/*.java</include>
                                 </includes>
+                                <!-- define the steps to apply to those files -->
+                                <trimTrailingWhitespace/>
+                                <endWithNewline/>
                             </format>
                         </formats>
                         <!-- define a language-specific format -->

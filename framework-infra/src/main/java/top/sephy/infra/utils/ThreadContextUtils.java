@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 sephy.top
+ * Copyright 2022-2025 sephy.top
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ public abstract class ThreadContextUtils {
     private static final ThreadLocal<ThreadContext> INSTANCE = new InheritableThreadLocal<>();
 
     public static <E> E getUserId() {
-        return (E)getContext().getUserId();
+        return (E) getContext().getUserId();
     }
 
     public static <E> void setUserId(E userId) {

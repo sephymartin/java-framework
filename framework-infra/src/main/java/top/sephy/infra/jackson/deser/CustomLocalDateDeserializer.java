@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 sephy.top
+ * Copyright 2022-2025 sephy.top
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,8 +41,8 @@ import com.fasterxml.jackson.databind.util.ClassUtil;
 
 public class CustomLocalDateDeserializer extends StdDeserializer<LocalDate> implements ContextualDeserializer {
 
-    public static final CustomLocalDateDeserializer INSTANCE =
-        new CustomLocalDateDeserializer(null, JsonFormat.Shape.NUMBER_INT);
+    public static final CustomLocalDateDeserializer INSTANCE = new CustomLocalDateDeserializer(null,
+            JsonFormat.Shape.NUMBER_INT);
 
     private static final DateTimeFormatter DEFAULT_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
     @Serial
@@ -51,10 +51,14 @@ public class CustomLocalDateDeserializer extends StdDeserializer<LocalDate> impl
     private final DateTimeFormatter _formatter;
 
     /**
-     * Setting that indicates the {@Link JsonFormat.Shape} specified for this deserializer as a {@link JsonFormat.Shape}
-     * annotation on property or class, or due to per-type "config override", or from global settings: If Shape is
-     * NUMBER_INT, the input value is considered to be epoch days. If not a NUMBER_INT, and the deserializer was not
-     * specified with the leniency setting of true, then an exception will be thrown.
+     * Setting that indicates the {@Link JsonFormat.Shape} specified for this
+     * deserializer as a {@link JsonFormat.Shape}
+     * annotation on property or class, or due to per-type "config override", or
+     * from global settings: If Shape is
+     * NUMBER_INT, the input value is considered to be epoch days. If not a
+     * NUMBER_INT, and the deserializer was not
+     * specified with the leniency setting of true, then an exception will be
+     * thrown.
      *
      * @since 2.11
      */
@@ -67,9 +71,11 @@ public class CustomLocalDateDeserializer extends StdDeserializer<LocalDate> impl
     }
 
     // @Override
-    // public LocalDateTime deserialize(JsonParser p, DeserializationContext ctxt) throws IOException,
+    // public LocalDateTime deserialize(JsonParser p, DeserializationContext ctxt)
+    // throws IOException,
     // JsonProcessingException {
-    // return LocalDateTime.ofInstant(Instant.ofEpochMilli(p.getValueAsLong()), ZoneId.systemDefault());
+    // return LocalDateTime.ofInstant(Instant.ofEpochMilli(p.getValueAsLong()),
+    // ZoneId.systemDefault());
     // }
 
     @Override
@@ -84,7 +90,7 @@ public class CustomLocalDateDeserializer extends StdDeserializer<LocalDate> impl
         }
 
         if (parser.hasToken(JsonToken.VALUE_EMBEDDED_OBJECT)) {
-            return (LocalDate)parser.getEmbeddedObject();
+            return (LocalDate) parser.getEmbeddedObject();
         }
 
         if (parser.hasToken(JsonToken.VALUE_NUMBER_INT)) {
@@ -95,9 +101,9 @@ public class CustomLocalDateDeserializer extends StdDeserializer<LocalDate> impl
     }
 
     protected <R> R _handleUnexpectedToken(DeserializationContext context, JsonParser parser, String message,
-        Object... args) throws JsonMappingException {
+            Object... args) throws JsonMappingException {
         try {
-            return (R)context.handleUnexpectedToken(handledType(), parser.getCurrentToken(), parser, message, args);
+            return (R) context.handleUnexpectedToken(handledType(), parser.getCurrentToken(), parser, message, args);
 
         } catch (JsonMappingException e) {
             throw e;
@@ -119,7 +125,8 @@ public class CustomLocalDateDeserializer extends StdDeserializer<LocalDate> impl
             // had bad timezone handle change from [modules-base#56]
             if (_formatter == DEFAULT_FORMATTER) {
                 // ... only allow iff lenient mode enabled since
-                // JavaScript by default includes time and zone in JSON serialized Dates (UTC/ISO instant format).
+                // JavaScript by default includes time and zone in JSON serialized Dates
+                // (UTC/ISO instant format).
                 // And if so, do NOT use zoned date parsing as that can easily produce
                 // incorrect answer.
                 if (string.length() > 10 && string.charAt(10) == 'T') {
@@ -127,8 +134,8 @@ public class CustomLocalDateDeserializer extends StdDeserializer<LocalDate> impl
                         if (isLenient()) {
                             return LocalDate.parse(string.substring(0, string.length() - 1), _formatter);
                         }
-                        return (LocalDate)ctxt.handleWeirdStringValue(LocalDateTime.class, string,
-                            "Should not contain offset when 'strict' mode set for property or type (enable 'lenient' handling to allow)");
+                        return (LocalDate) ctxt.handleWeirdStringValue(LocalDateTime.class, string,
+                                "Should not contain offset when 'strict' mode set for property or type (enable 'lenient' handling to allow)");
                     }
                 }
             }
@@ -140,10 +147,10 @@ public class CustomLocalDateDeserializer extends StdDeserializer<LocalDate> impl
     }
 
     protected <R> R _handleDateTimeException(DeserializationContext context, DateTimeException e0, String value)
-        throws JsonMappingException {
+            throws JsonMappingException {
         try {
-            return (R)context.handleWeirdStringValue(handledType(), value, "Failed to deserialize %s: (%s) %s",
-                handledType().getName(), e0.getClass().getName(), e0.getMessage());
+            return (R) context.handleWeirdStringValue(handledType(), value, "Failed to deserialize %s: (%s) %s",
+                    handledType().getName(), e0.getClass().getName(), e0.getMessage());
 
         } catch (JsonMappingException e) {
             e.initCause(e0);
@@ -157,30 +164,31 @@ public class CustomLocalDateDeserializer extends StdDeserializer<LocalDate> impl
     }
 
     protected LocalDateTime _failForNotLenient(JsonParser p, DeserializationContext ctxt, JsonToken expToken)
-        throws IOException {
-        return (LocalDateTime)ctxt.handleUnexpectedToken(handledType(), expToken, p,
-            "Cannot deserialize instance of %s out of %s token: not allowed because 'strict' mode set for property or type (enable 'lenient' handling to allow)",
-            ClassUtil.nameOf(handledType()), p.currentToken());
+            throws IOException {
+        return (LocalDateTime) ctxt.handleUnexpectedToken(handledType(), expToken, p,
+                "Cannot deserialize instance of %s out of %s token: not allowed because 'strict' mode set for property or type (enable 'lenient' handling to allow)",
+                ClassUtil.nameOf(handledType()), p.currentToken());
     }
 
     @Override
     public CustomLocalDateDeserializer createContextual(DeserializationContext ctxt, BeanProperty property)
-        throws JsonMappingException {
+            throws JsonMappingException {
         JsonFormat.Value format = findFormatOverrides(ctxt, property, handledType());
         return (format == null) ? this : _withFormatOverrides(ctxt, property, format);
     }
 
     protected JsonFormat.Value findFormatOverrides(DeserializationContext ctxt, BeanProperty prop,
-        Class<?> typeForDefaults) {
+            Class<?> typeForDefaults) {
         if (prop != null) {
             return prop.findPropertyFormat(ctxt.getConfig(), typeForDefaults);
         }
-        // even without property or AnnotationIntrospector, may have type-specific defaults
+        // even without property or AnnotationIntrospector, may have type-specific
+        // defaults
         return ctxt.getDefaultPropertyFormat(typeForDefaults);
     }
 
     protected CustomLocalDateDeserializer _withFormatOverrides(DeserializationContext ctxt, BeanProperty property,
-        JsonFormat.Value formatOverrides) {
+            JsonFormat.Value formatOverrides) {
         CustomLocalDateDeserializer deser = this;
 
         // 17-Aug-2019, tatu: For 2.10 let's start considering leniency/strictness too
@@ -210,15 +218,18 @@ public class CustomLocalDateDeserializer extends StdDeserializer<LocalDate> impl
                 df = df.withResolverStyle(ResolverStyle.STRICT);
             }
 
-            // [#69]: For instant serializers/deserializers we need to configure the formatter with
-            // a time zone picked up from JsonFormat annotation, otherwise serialization might not work
+            // [#69]: For instant serializers/deserializers we need to configure the
+            // formatter with
+            // a time zone picked up from JsonFormat annotation, otherwise serialization
+            // might not work
             if (formatOverrides.hasTimeZone()) {
                 df = df.withZone(formatOverrides.getTimeZone().toZoneId());
             }
             deser = deser.withDateFormat(df);
         }
         // [#58]: For LocalDate deserializers we need to configure the formatter with
-        // a shape picked up from JsonFormat annotation, to decide if the value is EpochSeconds
+        // a shape picked up from JsonFormat annotation, to decide if the value is
+        // EpochSeconds
         JsonFormat.Shape shape = formatOverrides.getShape();
         if (shape != null && shape != _shape) {
             deser = deser.withShape(shape);

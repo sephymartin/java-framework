@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 sephy.top
+ * Copyright 2022-2025 sephy.top
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,9 +25,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
-import lombok.Setter;
-import net.sf.jsqlparser.expression.*;
-import net.sf.jsqlparser.statement.select.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.BoundSql;
@@ -44,18 +41,22 @@ import com.baomidou.mybatisplus.extension.plugins.inner.DataChangeRecorderInnerI
 import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
 
 import lombok.NonNull;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.jsqlparser.expression.*;
 import net.sf.jsqlparser.expression.operators.relational.ExpressionList;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.delete.Delete;
 import net.sf.jsqlparser.statement.insert.Insert;
+import net.sf.jsqlparser.statement.select.*;
 import top.sephy.infra.exception.SystemException;
 import top.sephy.infra.mybatis.interceptor.CurrentUserExtractor;
 
 /**
- * save delete content before real delete operation, user can customize table name, column name
+ * save delete content before real delete operation, user can customize table
+ * name, column name
  * 
  */
 @Slf4j
@@ -138,11 +139,11 @@ public class DeleteLogInterceptor implements InnerInterceptor {
                     if (ignoreTables.containsKey(sqlTableName.toLowerCase())) {
                         return;
                     }
-                    processDelete((Delete)statement, ms, boundSql, connection);
+                    processDelete((Delete) statement, ms, boundSql, connection);
                 }
             } catch (Exception e) {
                 if (e instanceof DataChangeRecorderInnerInterceptor.DataUpdateLimitationException) {
-                    throw (DataChangeRecorderInnerInterceptor.DataUpdateLimitationException)e;
+                    throw (DataChangeRecorderInnerInterceptor.DataUpdateLimitationException) e;
                 }
                 log.error("Unexpected error for mappedStatement={}, sql={}", ms.getId(), mpBs.sql(), e);
                 return;
@@ -153,7 +154,7 @@ public class DeleteLogInterceptor implements InnerInterceptor {
 
     private void batchUpdateCheckCountByTransactionIsolation(Connection connection) {
         try {
-            if(Objects.isNull(batchUpdateCheckCountOpened)) {
+            if (Objects.isNull(batchUpdateCheckCountOpened)) {
                 int isolationLevel = connection.getTransactionIsolation();
                 this.batchUpdateCheckCountOpened = Connection.TRANSACTION_REPEATABLE_READ == isolationLevel;
             }
@@ -164,7 +165,7 @@ public class DeleteLogInterceptor implements InnerInterceptor {
     }
 
     public void processDelete(Delete deleteStmt, MappedStatement mappedStatement, BoundSql boundSql,
-        Connection connection) {
+            Connection connection) {
         Table table = deleteStmt.getTable();
         TableInfo tableInfo = TableInfoHelper.getTableInfo(table.getName());
         if (tableInfo != null) {
@@ -248,11 +249,11 @@ public class DeleteLogInterceptor implements InnerInterceptor {
             jsonFunction.withType(JsonFunctionType.MYSQL_OBJECT);
             jsonFunction.withOnNullType(JsonAggregateOnNullType.NULL);
             jsonFunction.add(new JsonKeyValuePair(surroundedBySingleQuotes(tableInfo.getKeyColumn()),
-                new Column(selectItemTable, tableInfo.getKeyColumn()).toString(), false, false));
+                    new Column(selectItemTable, tableInfo.getKeyColumn()).toString(), false, false));
             List<TableFieldInfo> fieldList = tableInfo.getFieldList();
             for (TableFieldInfo tableFieldInfo : fieldList) {
                 jsonFunction.add(new JsonKeyValuePair(surroundedBySingleQuotes(tableFieldInfo.getColumn()),
-                    new Column(selectItemTable, tableFieldInfo.getColumn()).toString(), false, false));
+                        new Column(selectItemTable, tableFieldInfo.getColumn()).toString(), false, false));
             }
 
             // JSON_OBJECT
@@ -261,7 +262,8 @@ public class DeleteLogInterceptor implements InnerInterceptor {
             if (this.colNameOperator != null && this.currentUserExtractor != null) {
                 Object currentUserId = this.currentUserExtractor.getCurrentUserId();
                 selectItems.add(new SelectItem<>(currentUserId instanceof String
-                    ? new StringValue(currentUserId.toString()) : new LongValue(currentUserId.toString())));
+                        ? new StringValue(currentUserId.toString())
+                        : new LongValue(currentUserId.toString())));
             }
 
             plainSelect.setSelectItems(selectItems);
@@ -276,39 +278,40 @@ public class DeleteLogInterceptor implements InnerInterceptor {
         return select;
     }
 
-    private int copyOriginalData(PlainSelect selectStmt, Delete deleteStmt, MappedStatement mappedStatement, BoundSql boundSql,
-                                 Connection connection) {
+    private int copyOriginalData(PlainSelect selectStmt, Delete deleteStmt, MappedStatement mappedStatement,
+            BoundSql boundSql, Connection connection) {
 
-        if(Boolean.TRUE.equals(batchUpdateCheckCountOpened)) {
+        if (Boolean.TRUE.equals(batchUpdateCheckCountOpened)) {
             checkCount(selectStmt, deleteStmt, mappedStatement, boundSql, connection);
         }
         String insertSelectSql = generateInsertSelectSql(selectStmt).toString();
         try (PreparedStatement statement = connection.prepareStatement(insertSelectSql)) {
-            DefaultParameterHandler parameterHandler =
-                new DefaultParameterHandler(mappedStatement, boundSql.getParameterObject(), boundSql);
+            DefaultParameterHandler parameterHandler = new DefaultParameterHandler(mappedStatement,
+                    boundSql.getParameterObject(), boundSql);
             parameterHandler.setParameters(statement);
             int i = statement.executeUpdate();
-            if(Boolean.FALSE.equals(batchUpdateCheckCountOpened)) {
+            if (Boolean.FALSE.equals(batchUpdateCheckCountOpened)) {
                 checkTableBatchLimitExceeded(selectStmt, i);
             }
             return i;
         } catch (Exception e) {
             if (e instanceof DataChangeRecorderInnerInterceptor.DataUpdateLimitationException) {
-                throw (DataChangeRecorderInnerInterceptor.DataUpdateLimitationException)e;
+                throw (DataChangeRecorderInnerInterceptor.DataUpdateLimitationException) e;
             }
             log.error("try to get record tobe deleted for selectStmt={}", selectStmt, e);
             throw new SystemException(e);
         }
     }
 
-    private void checkCount(PlainSelect selectStmt, Delete deleteStmt, MappedStatement mappedStatement, BoundSql boundSql, Connection connection) {
+    private void checkCount(PlainSelect selectStmt, Delete deleteStmt, MappedStatement mappedStatement,
+            BoundSql boundSql, Connection connection) {
         PlainSelect selectCount = getPlainSelectCount(deleteStmt);
         try (PreparedStatement statement = connection.prepareStatement(selectCount.toString())) {
-            DefaultParameterHandler parameterHandler =
-                    new DefaultParameterHandler(mappedStatement, boundSql.getParameterObject(), boundSql);
+            DefaultParameterHandler parameterHandler = new DefaultParameterHandler(mappedStatement,
+                    boundSql.getParameterObject(), boundSql);
             parameterHandler.setParameters(statement);
             ResultSet resultSet = statement.executeQuery();
-            if(resultSet.next()) {
+            if (resultSet.next()) {
                 int count = resultSet.getInt(1);
                 checkTableBatchLimitExceeded(selectStmt, count);
             }
@@ -324,18 +327,18 @@ public class DeleteLogInterceptor implements InnerInterceptor {
         }
         final FromItem fromItem = plainSelect.getFromItem();
         if (fromItem instanceof Table) {
-            Table fromTable = (Table)fromItem;
+            Table fromTable = (Table) fromItem;
             final String tableName = fromTable.getName().toLowerCase();
             Integer limit = batchUpdateLimitMap.getOrDefault(tableName, defaultBatchUpdateLimit);
             if (count > limit) {
-                String msg =
-                    String.format("batch update limit exceed for configured tableName=%s, limit=%d, " + "count=%d",
+                String msg = String.format(
+                        "batch update limit exceed for configured tableName=%s, limit=%d, " + "count=%d",
                         tableName, limit, count);
                 throw new DataChangeRecorderInnerInterceptor.DataUpdateLimitationException(msg);
             }
         } else if (count > defaultBatchUpdateLimit) {
             String msg = String.format("batch update limit exceed for configured tableName=%s, limit=%d, " + "count=%d",
-                tableName, defaultBatchUpdateLimit, count);
+                    tableName, defaultBatchUpdateLimit, count);
             throw new DataChangeRecorderInnerInterceptor.DataUpdateLimitationException(msg);
         }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 sephy.top
+ * Copyright 2022-2025 sephy.top
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,13 +48,13 @@ public class CustomPOJOSerializerModifier extends BeanSerializerModifier {
     private final ConversionService conversionService;
 
     public CustomPOJOSerializerModifier(DictEntryProvider<Object, Object> dictEntryProvider,
-        ConversionService conversionService) {
+            ConversionService conversionService) {
         this.dictEntryProvider = dictEntryProvider;
         this.conversionService = conversionService;
     }
 
     public List<BeanPropertyWriter> changeProperties(SerializationConfig config, BeanDescription beanDesc,
-        List<BeanPropertyWriter> beanProperties) {
+            List<BeanPropertyWriter> beanProperties) {
 
         Class<?> beanClass = beanDesc.getBeanClass();
 

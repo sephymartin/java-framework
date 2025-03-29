@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022-2025 sephy.top
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package top.sephy.infra.utils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,7 +52,9 @@ class HttpClientUtilsTest {
                                               -H 'sec-ch-ua-platform: "macOS"'
                 """;
         HttpUriRequest request = HttpClientUtils.curlToHttpRequest(curlCommand);
-        assertEquals("https://www.baidu.com/sugrec?pre=1&p=3&ie=utf-8&json=1&prod=pc&from=pc_web&sugsid=61027,61216,61361,60853,61530,61534,61608,61721,61729&wd=curl&his=%5B%7B%22time%22%3A1713705986%2C%22kw%22%3A%22%E5%A4%A9%E6%B5%99%E5%A4%A9%E4%B8%8B%E5%95%86%E5%B8%AE%E7%A7%91%E6%8A%80%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%208637%22%7D%2C%7B%22time%22%3A1713705994%2C%22kw%22%3A%22%E6%B5%99%E6%B1%9F%E5%A4%A9%E4%B8%8B%E5%95%86%E5%B8%AE%E7%A7%91%E6%8A%80%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%208637%22%7D%2C%7B%22time%22%3A1714668512%2C%22kw%22%3A%22caswl%22%7D%2C%7B%22time%22%3A1715830502%2C%22kw%22%3A%22%5Beacces%5D%22%2C%22fq%22%3A2%7D%2C%7B%22time%22%3A1722177829%2C%22kw%22%3A%22ping%E6%B5%8B%E8%AF%95%22%2C%22fq%22%3A2%7D%2C%7B%22time%22%3A1729524662%2C%22kw%22%3A%22122.228.207.52%22%7D%2C%7B%22time%22%3A1730103268%2C%22kw%22%3A%22%E9%99%88%E8%8A%AF%E6%80%A1%E7%99%BE%E7%A7%91%22%7D%2C%7B%22time%22%3A1730103270%2C%22kw%22%3A%22%E9%99%88%E8%8A%AF%E6%80%A1%22%7D%2C%7B%22time%22%3A1734341253%2C%22kw%22%3A%22cadvisor%20%E7%9B%91%E6%8E%A7%22%7D%2C%7B%22time%22%3A1736225557%2C%22kw%22%3A%22curl%22%7D%5D&req=2&bs=curl&pbs=curl&csor=4&pwd=curl&sugmode=2&hot_launch=0&cb=jQuery1102010998424233041248_1736225551313&_=1736225551320", request.getUri().toString());
+        assertEquals(
+            "https://www.baidu.com/sugrec?pre=1&p=3&ie=utf-8&json=1&prod=pc&from=pc_web&sugsid=61027,61216,61361,60853,61530,61534,61608,61721,61729&wd=curl&his=%5B%7B%22time%22%3A1713705986%2C%22kw%22%3A%22%E5%A4%A9%E6%B5%99%E5%A4%A9%E4%B8%8B%E5%95%86%E5%B8%AE%E7%A7%91%E6%8A%80%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%208637%22%7D%2C%7B%22time%22%3A1713705994%2C%22kw%22%3A%22%E6%B5%99%E6%B1%9F%E5%A4%A9%E4%B8%8B%E5%95%86%E5%B8%AE%E7%A7%91%E6%8A%80%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%208637%22%7D%2C%7B%22time%22%3A1714668512%2C%22kw%22%3A%22caswl%22%7D%2C%7B%22time%22%3A1715830502%2C%22kw%22%3A%22%5Beacces%5D%22%2C%22fq%22%3A2%7D%2C%7B%22time%22%3A1722177829%2C%22kw%22%3A%22ping%E6%B5%8B%E8%AF%95%22%2C%22fq%22%3A2%7D%2C%7B%22time%22%3A1729524662%2C%22kw%22%3A%22122.228.207.52%22%7D%2C%7B%22time%22%3A1730103268%2C%22kw%22%3A%22%E9%99%88%E8%8A%AF%E6%80%A1%E7%99%BE%E7%A7%91%22%7D%2C%7B%22time%22%3A1730103270%2C%22kw%22%3A%22%E9%99%88%E8%8A%AF%E6%80%A1%22%7D%2C%7B%22time%22%3A1734341253%2C%22kw%22%3A%22cadvisor%20%E7%9B%91%E6%8E%A7%22%7D%2C%7B%22time%22%3A1736225557%2C%22kw%22%3A%22curl%22%7D%5D&req=2&bs=curl&pbs=curl&csor=4&pwd=curl&sugmode=2&hot_launch=0&cb=jQuery1102010998424233041248_1736225551313&_=1736225551320",
+            request.getUri().toString());
         assertEquals("GET", ((HttpUriRequestBase)request).getMethod());
         HttpResponse response = httpClient.execute(request);
         assertEquals(200, response.getCode());

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 sephy.top
+ * Copyright 2022-2025 sephy.top
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,14 +37,15 @@ public class CustomSecurityUser extends User implements AuthenticationInfo<Long>
 
     private Map<String, Object> otherInfo = new HashMap<>();
 
-    // @ConstructorProperties({"username", "password", "enabled", "accountNonExpired", "credentialsNonExpired",
+    // @ConstructorProperties({"username", "password", "enabled",
+    // "accountNonExpired", "credentialsNonExpired",
     // "accountNonLocked", "authorities"})
     public CustomSecurityUser(@JsonProperty("username") String username, @JsonProperty("password") String password,
-        @JsonProperty("enabled") boolean enabled, @JsonProperty("accountNonExpired") boolean accountNonExpired,
-        @JsonProperty("credentialsNonExpired") boolean credentialsNonExpired,
-        @JsonProperty("accountNonLocked") boolean accountNonLocked,
-        @JsonProperty("authorities") Collection<? extends GrantedAuthority> authorities,
-        @JsonProperty("otherInfo") Map<String, Object> otherInfo) {
+            @JsonProperty("enabled") boolean enabled, @JsonProperty("accountNonExpired") boolean accountNonExpired,
+            @JsonProperty("credentialsNonExpired") boolean credentialsNonExpired,
+            @JsonProperty("accountNonLocked") boolean accountNonLocked,
+            @JsonProperty("authorities") Collection<? extends GrantedAuthority> authorities,
+            @JsonProperty("otherInfo") Map<String, Object> otherInfo) {
         super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
         if (otherInfo != null) {
             this.otherInfo.putAll(otherInfo);
@@ -52,15 +53,15 @@ public class CustomSecurityUser extends User implements AuthenticationInfo<Long>
     }
 
     public Long getUserId() {
-        return (Long)otherInfo.get(KEY_USER_ID);
+        return (Long) otherInfo.get(KEY_USER_ID);
     }
 
     public String getNickname() {
-        return (String)otherInfo.get(KEY_NICKNAME);
+        return (String) otherInfo.get(KEY_NICKNAME);
     }
 
     public Map<String, Object> getOtherInfo() {
         return otherInfo == null || otherInfo.isEmpty() ? Collections.emptyMap()
-            : Collections.unmodifiableMap(otherInfo);
+                : Collections.unmodifiableMap(otherInfo);
     }
 }
