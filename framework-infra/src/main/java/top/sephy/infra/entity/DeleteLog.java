@@ -22,10 +22,11 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
 @TableName("delete_log")
-public class DeleteLog extends AbstractBaseEntity<Long> {
+public class DeleteLog extends AbstractBaseEntity {
 
     @Serial
     private static final long serialVersionUID = 6410332327917931515L;
