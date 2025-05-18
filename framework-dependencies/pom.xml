@@ -60,9 +60,13 @@
 
         <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
         <jackson.version>${jackson-bom.version}</jackson.version>
+
+        <jsonwebtoken.version>0.12.6</jsonwebtoken.version>
+
         <javax.servlet-api.version>4.0.1</javax.servlet-api.version>
         <jsch.version>0.1.55</jsch.version>
         <jsoup.version>1.11.3</jsoup.version>
+
 
         <knife4j.version>4.3.0</knife4j.version>
         <!-- @formatter:off -->
@@ -100,6 +104,8 @@
         <poi.version>4.1.2</poi.version>
 
         <redisson.version>3.25.2</redisson.version>
+        <rewrite-maven-plugin.version>6.8.1</rewrite-maven-plugin.version>
+        <rewrite-static-analysis.vesion>2.9.0</rewrite-static-analysis.vesion>
         <rome.version>2.1.0</rome.version>
 
         <shardingsphere.version>5.4.1</shardingsphere.version>
@@ -135,6 +141,23 @@
 
     <dependencyManagement>
         <dependencies>
+
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-api</artifactId>
+                <version>${jsonwebtoken.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-impl</artifactId>
+                <version>${jsonwebtoken.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-jackson</artifactId>
+                <version>${jsonwebtoken.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.mybatis.spring.boot</groupId>
                 <artifactId>mybatis-spring-boot-autoconfigure</artifactId>
