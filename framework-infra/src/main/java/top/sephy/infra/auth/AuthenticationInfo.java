@@ -15,11 +15,17 @@
  */
 package top.sephy.infra.auth;
 
-import java.util.Map;
+public interface AuthenticationInfo {
 
-public interface AuthenticationInfo<T> {
+    String KEY_USER_ID = "userId";
 
-    T getUserId();
+    String KEY_NICKNAME = "nickname";
+
+    String KEY_USERNAME = "username";
+
+    Long getUserId();
+
+    String getUsername();
 
     /**
      * 获取当前用户名称
@@ -27,7 +33,4 @@ public interface AuthenticationInfo<T> {
      * @return
      */
     String getNickname();
-
-    Map<String, Object> getOtherInfo();
-
 }

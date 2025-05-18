@@ -15,14 +15,14 @@
  */
 package top.sephy.infra.auth;
 
-public interface AuthenticationAdapter<T> {
+public interface AuthenticationAdapter {
 
     /**
      * 获取当前用户 ID
      * 
      * @return
      */
-    T getCurrentUserId();
+    Long getCurrentUserId();
 
     /**
      * 获取当前用户信息

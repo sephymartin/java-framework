@@ -24,6 +24,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import lombok.extern.slf4j.Slf4j;
+import top.sephy.infra.security.CustomSecurityUser;
 
 @Slf4j
 public class AuthenticationInfoResolver implements HandlerMethodArgumentResolver {
@@ -35,17 +36,17 @@ public class AuthenticationInfoResolver implements HandlerMethodArgumentResolver
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-            NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+        NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         Authentication annotation = parameter.getParameterAnnotation(Authentication.class);
-
-        org.springframework.security.core.Authentication authentication = SecurityContextHolder.getContext()
-                .getAuthentication();
+        webRequest.getSessionId();
+        org.springframework.security.core.Authentication authentication =
+            SecurityContextHolder.getContext().getAuthentication();
 
         Object value = null;
         if (authentication != null) {
             Object principal = authentication.getPrincipal();
-            if (principal instanceof AuthenticationInfo) {
-                value = principal;
+            if (principal instanceof CustomSecurityUser customSecurityUser) {
+                value = new SimpleAuthenticationInfo(customSecurityUser.getAttributes());
             }
         }
 
