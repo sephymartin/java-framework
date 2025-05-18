@@ -139,11 +139,11 @@ public class DeleteLogInterceptor implements InnerInterceptor {
                     if (ignoreTables.containsKey(sqlTableName.toLowerCase())) {
                         return;
                     }
-                    processDelete((Delete) statement, ms, boundSql, connection);
+                    processDelete((Delete)statement, ms, boundSql, connection);
                 }
             } catch (Exception e) {
                 if (e instanceof DataChangeRecorderInnerInterceptor.DataUpdateLimitationException) {
-                    throw (DataChangeRecorderInnerInterceptor.DataUpdateLimitationException) e;
+                    throw (DataChangeRecorderInnerInterceptor.DataUpdateLimitationException)e;
                 }
                 log.error("Unexpected error for mappedStatement={}, sql={}", ms.getId(), mpBs.sql(), e);
                 return;
@@ -165,7 +165,7 @@ public class DeleteLogInterceptor implements InnerInterceptor {
     }
 
     public void processDelete(Delete deleteStmt, MappedStatement mappedStatement, BoundSql boundSql,
-            Connection connection) {
+        Connection connection) {
         Table table = deleteStmt.getTable();
         TableInfo tableInfo = TableInfoHelper.getTableInfo(table.getName());
         if (tableInfo != null) {
@@ -249,11 +249,11 @@ public class DeleteLogInterceptor implements InnerInterceptor {
             jsonFunction.withType(JsonFunctionType.MYSQL_OBJECT);
             jsonFunction.withOnNullType(JsonAggregateOnNullType.NULL);
             jsonFunction.add(new JsonKeyValuePair(surroundedBySingleQuotes(tableInfo.getKeyColumn()),
-                    new Column(selectItemTable, tableInfo.getKeyColumn()).toString(), false, false));
+                new Column(selectItemTable, tableInfo.getKeyColumn()).toString(), false, false));
             List<TableFieldInfo> fieldList = tableInfo.getFieldList();
             for (TableFieldInfo tableFieldInfo : fieldList) {
                 jsonFunction.add(new JsonKeyValuePair(surroundedBySingleQuotes(tableFieldInfo.getColumn()),
-                        new Column(selectItemTable, tableFieldInfo.getColumn()).toString(), false, false));
+                    new Column(selectItemTable, tableFieldInfo.getColumn()).toString(), false, false));
             }
 
             // JSON_OBJECT
@@ -262,8 +262,7 @@ public class DeleteLogInterceptor implements InnerInterceptor {
             if (this.colNameOperator != null && this.currentUserExtractor != null) {
                 Object currentUserId = this.currentUserExtractor.getCurrentUserId();
                 selectItems.add(new SelectItem<>(currentUserId instanceof String
-                        ? new StringValue(currentUserId.toString())
-                        : new LongValue(currentUserId.toString())));
+                    ? new StringValue(currentUserId.toString()) : new LongValue(currentUserId.toString())));
             }
 
             plainSelect.setSelectItems(selectItems);
@@ -279,15 +278,15 @@ public class DeleteLogInterceptor implements InnerInterceptor {
     }
 
     private int copyOriginalData(PlainSelect selectStmt, Delete deleteStmt, MappedStatement mappedStatement,
-            BoundSql boundSql, Connection connection) {
+        BoundSql boundSql, Connection connection) {
 
         if (Boolean.TRUE.equals(batchUpdateCheckCountOpened)) {
             checkCount(selectStmt, deleteStmt, mappedStatement, boundSql, connection);
         }
         String insertSelectSql = generateInsertSelectSql(selectStmt).toString();
         try (PreparedStatement statement = connection.prepareStatement(insertSelectSql)) {
-            DefaultParameterHandler parameterHandler = new DefaultParameterHandler(mappedStatement,
-                    boundSql.getParameterObject(), boundSql);
+            DefaultParameterHandler parameterHandler =
+                new DefaultParameterHandler(mappedStatement, boundSql.getParameterObject(), boundSql);
             parameterHandler.setParameters(statement);
             int i = statement.executeUpdate();
             if (Boolean.FALSE.equals(batchUpdateCheckCountOpened)) {
@@ -296,7 +295,7 @@ public class DeleteLogInterceptor implements InnerInterceptor {
             return i;
         } catch (Exception e) {
             if (e instanceof DataChangeRecorderInnerInterceptor.DataUpdateLimitationException) {
-                throw (DataChangeRecorderInnerInterceptor.DataUpdateLimitationException) e;
+                throw (DataChangeRecorderInnerInterceptor.DataUpdateLimitationException)e;
             }
             log.error("try to get record tobe deleted for selectStmt={}", selectStmt, e);
             throw new SystemException(e);
@@ -304,11 +303,11 @@ public class DeleteLogInterceptor implements InnerInterceptor {
     }
 
     private void checkCount(PlainSelect selectStmt, Delete deleteStmt, MappedStatement mappedStatement,
-            BoundSql boundSql, Connection connection) {
+        BoundSql boundSql, Connection connection) {
         PlainSelect selectCount = getPlainSelectCount(deleteStmt);
         try (PreparedStatement statement = connection.prepareStatement(selectCount.toString())) {
-            DefaultParameterHandler parameterHandler = new DefaultParameterHandler(mappedStatement,
-                    boundSql.getParameterObject(), boundSql);
+            DefaultParameterHandler parameterHandler =
+                new DefaultParameterHandler(mappedStatement, boundSql.getParameterObject(), boundSql);
             parameterHandler.setParameters(statement);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
@@ -327,18 +326,18 @@ public class DeleteLogInterceptor implements InnerInterceptor {
         }
         final FromItem fromItem = plainSelect.getFromItem();
         if (fromItem instanceof Table) {
-            Table fromTable = (Table) fromItem;
+            Table fromTable = (Table)fromItem;
             final String tableName = fromTable.getName().toLowerCase();
             Integer limit = batchUpdateLimitMap.getOrDefault(tableName, defaultBatchUpdateLimit);
             if (count > limit) {
-                String msg = String.format(
-                        "batch update limit exceed for configured tableName=%s, limit=%d, " + "count=%d",
+                String msg =
+                    String.format("batch update limit exceed for configured tableName=%s, limit=%d, " + "count=%d",
                         tableName, limit, count);
                 throw new DataChangeRecorderInnerInterceptor.DataUpdateLimitationException(msg);
             }
         } else if (count > defaultBatchUpdateLimit) {
             String msg = String.format("batch update limit exceed for configured tableName=%s, limit=%d, " + "count=%d",
-                    tableName, defaultBatchUpdateLimit, count);
+                tableName, defaultBatchUpdateLimit, count);
             throw new DataChangeRecorderInnerInterceptor.DataUpdateLimitationException(msg);
         }
     }

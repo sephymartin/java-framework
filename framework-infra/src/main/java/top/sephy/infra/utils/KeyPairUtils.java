@@ -59,8 +59,8 @@ public abstract class KeyPairUtils {
         try {
             CertificateFactory certificateFactory = CertificateFactory.getInstance("X509");
             String src = removeNoneKeyString(key);
-            Certificate certificate = certificateFactory
-                    .generateCertificate(new ByteArrayInputStream(Base64.getDecoder().decode(src)));
+            Certificate certificate =
+                certificateFactory.generateCertificate(new ByteArrayInputStream(Base64.getDecoder().decode(src)));
             return certificate.getPublicKey();
         } catch (Exception e) {
             throw new RuntimeException("加载公钥失败", e);

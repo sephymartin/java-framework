@@ -32,12 +32,12 @@ public abstract class StringMapUtils {
     }
 
     public static String joinString(Map<String, String> map, String delimiter, String connector,
-            Set<String> excludeKeys) {
+        Set<String> excludeKeys) {
         return joinString(map, delimiter, connector, excludeKeys, true, true);
     }
 
     public static String joinString(Map<String, String> map, String delimiter, String connector,
-            Set<String> excludeKeys, boolean excludeEmptyValue, boolean sort) {
+        Set<String> excludeKeys, boolean excludeEmptyValue, boolean sort) {
         boolean excludeKey = (excludeKeys != null && !excludeKeys.isEmpty());
         Map<String, String> tmpMap = map;
         if (sort) {

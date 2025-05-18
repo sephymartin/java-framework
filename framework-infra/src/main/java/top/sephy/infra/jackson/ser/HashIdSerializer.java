@@ -51,7 +51,7 @@ public class HashIdSerializer extends StdSerializer<Long> implements ContextualS
 
     @Override
     public JsonSerializer<?> createContextual(SerializerProvider prov, BeanProperty property)
-            throws JsonMappingException {
+        throws JsonMappingException {
         if (property != null) {
             JsonHashId jsonHashId = property.getAnnotation(JsonHashId.class);
             if (jsonHashId != null) {

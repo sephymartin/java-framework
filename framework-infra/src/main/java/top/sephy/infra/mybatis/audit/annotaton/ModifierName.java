@@ -24,6 +24,5 @@ import java.lang.annotation.Target;
  * 自动维护修改人
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(value = { ElementType.FIELD })
-public @interface ModifierName {
-}
+@Target(value = {ElementType.FIELD})
+public @interface ModifierName {}

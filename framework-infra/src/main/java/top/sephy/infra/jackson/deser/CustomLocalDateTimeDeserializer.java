@@ -45,8 +45,8 @@ import com.fasterxml.jackson.databind.util.ClassUtil;
  */
 public class CustomLocalDateTimeDeserializer extends StdDeserializer<LocalDateTime> implements ContextualDeserializer {
 
-    public static final CustomLocalDateTimeDeserializer INSTANCE = new CustomLocalDateTimeDeserializer(null,
-            JsonFormat.Shape.NUMBER_INT);
+    public static final CustomLocalDateTimeDeserializer INSTANCE =
+        new CustomLocalDateTimeDeserializer(null, JsonFormat.Shape.NUMBER_INT);
 
     private static final DateTimeFormatter DEFAULT_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
     @Serial
@@ -94,7 +94,7 @@ public class CustomLocalDateTimeDeserializer extends StdDeserializer<LocalDateTi
         }
 
         if (parser.hasToken(JsonToken.VALUE_EMBEDDED_OBJECT)) {
-            return (LocalDateTime) parser.getEmbeddedObject();
+            return (LocalDateTime)parser.getEmbeddedObject();
         }
 
         if (parser.hasToken(JsonToken.VALUE_NUMBER_INT)) {
@@ -105,9 +105,9 @@ public class CustomLocalDateTimeDeserializer extends StdDeserializer<LocalDateTi
     }
 
     protected <R> R _handleUnexpectedToken(DeserializationContext context, JsonParser parser, String message,
-            Object... args) throws JsonMappingException {
+        Object... args) throws JsonMappingException {
         try {
-            return (R) context.handleUnexpectedToken(handledType(), parser.getCurrentToken(), parser, message, args);
+            return (R)context.handleUnexpectedToken(handledType(), parser.getCurrentToken(), parser, message, args);
 
         } catch (JsonMappingException e) {
             throw e;
@@ -138,8 +138,8 @@ public class CustomLocalDateTimeDeserializer extends StdDeserializer<LocalDateTi
                         if (isLenient()) {
                             return LocalDateTime.parse(string.substring(0, string.length() - 1), _formatter);
                         }
-                        return (LocalDateTime) ctxt.handleWeirdStringValue(LocalDateTime.class, string,
-                                "Should not contain offset when 'strict' mode set for property or type (enable 'lenient' handling to allow)");
+                        return (LocalDateTime)ctxt.handleWeirdStringValue(LocalDateTime.class, string,
+                            "Should not contain offset when 'strict' mode set for property or type (enable 'lenient' handling to allow)");
                     }
                 }
             }
@@ -151,10 +151,10 @@ public class CustomLocalDateTimeDeserializer extends StdDeserializer<LocalDateTi
     }
 
     protected <R> R _handleDateTimeException(DeserializationContext context, DateTimeException e0, String value)
-            throws JsonMappingException {
+        throws JsonMappingException {
         try {
-            return (R) context.handleWeirdStringValue(handledType(), value, "Failed to deserialize %s: (%s) %s",
-                    handledType().getName(), e0.getClass().getName(), e0.getMessage());
+            return (R)context.handleWeirdStringValue(handledType(), value, "Failed to deserialize %s: (%s) %s",
+                handledType().getName(), e0.getClass().getName(), e0.getMessage());
 
         } catch (JsonMappingException e) {
             e.initCause(e0);
@@ -168,21 +168,21 @@ public class CustomLocalDateTimeDeserializer extends StdDeserializer<LocalDateTi
     }
 
     protected LocalDateTime _failForNotLenient(JsonParser p, DeserializationContext ctxt, JsonToken expToken)
-            throws IOException {
-        return (LocalDateTime) ctxt.handleUnexpectedToken(handledType(), expToken, p,
-                "Cannot deserialize instance of %s out of %s token: not allowed because 'strict' mode set for property or type (enable 'lenient' handling to allow)",
-                ClassUtil.nameOf(handledType()), p.currentToken());
+        throws IOException {
+        return (LocalDateTime)ctxt.handleUnexpectedToken(handledType(), expToken, p,
+            "Cannot deserialize instance of %s out of %s token: not allowed because 'strict' mode set for property or type (enable 'lenient' handling to allow)",
+            ClassUtil.nameOf(handledType()), p.currentToken());
     }
 
     @Override
     public CustomLocalDateTimeDeserializer createContextual(DeserializationContext ctxt, BeanProperty property)
-            throws JsonMappingException {
+        throws JsonMappingException {
         JsonFormat.Value format = findFormatOverrides(ctxt, property, handledType());
         return (format == null) ? this : _withFormatOverrides(ctxt, property, format);
     }
 
     protected JsonFormat.Value findFormatOverrides(DeserializationContext ctxt, BeanProperty prop,
-            Class<?> typeForDefaults) {
+        Class<?> typeForDefaults) {
         if (prop != null) {
             return prop.findPropertyFormat(ctxt.getConfig(), typeForDefaults);
         }
@@ -192,7 +192,7 @@ public class CustomLocalDateTimeDeserializer extends StdDeserializer<LocalDateTi
     }
 
     protected CustomLocalDateTimeDeserializer _withFormatOverrides(DeserializationContext ctxt, BeanProperty property,
-            JsonFormat.Value formatOverrides) {
+        JsonFormat.Value formatOverrides) {
         CustomLocalDateTimeDeserializer deser = this;
 
         // 17-Aug-2019, tatu: For 2.10 let's start considering leniency/strictness too

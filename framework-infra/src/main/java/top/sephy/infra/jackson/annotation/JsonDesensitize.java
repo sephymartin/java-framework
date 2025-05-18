@@ -27,7 +27,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import top.sephy.infra.jackson.ser.JsonDesensitizeSerializer;
 import top.sephy.infra.security.DesensitizationStrategy;
 
-@Target({ ElementType.FIELD })
+@Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @JacksonAnnotationsInside
 @JsonSerialize(using = JsonDesensitizeSerializer.class)

@@ -21,8 +21,7 @@ package top.sephy.infra.exception;
  */
 public class SystemException extends RuntimeException {
 
-    public SystemException() {
-    }
+    public SystemException() {}
 
     public SystemException(String message) {
         super(message);

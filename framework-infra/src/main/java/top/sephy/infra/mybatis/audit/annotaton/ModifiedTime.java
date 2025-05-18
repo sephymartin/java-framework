@@ -24,6 +24,5 @@ import java.lang.annotation.Target;
  * 修改时间
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(value = { ElementType.FIELD })
-public @interface ModifiedTime {
-}
+@Target(value = {ElementType.FIELD})
+public @interface ModifiedTime {}

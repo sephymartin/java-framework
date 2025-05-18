@@ -18,6 +18,9 @@ package top.sephy.infra.web.filter;
 import java.io.IOException;
 import java.util.Collection;
 
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.core.annotation.Order;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.PathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -28,11 +31,15 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
+import lombok.Setter;
 
 /**
  * @description: 用于排除指定路径的过滤器
  */
-public class ExcludePatternFilterWrapper extends OncePerRequestFilter {
+public class ExcludePatternFilterWrapper extends OncePerRequestFilter implements Ordered {
+
+    @Setter
+    private int order = 0;
 
     private PathMatcher pathMatcher = new AntPathMatcher();
 
@@ -43,6 +50,13 @@ public class ExcludePatternFilterWrapper extends OncePerRequestFilter {
     public ExcludePatternFilterWrapper(@NonNull Filter delegate, @NonNull Collection<String> excludePatterns) {
         this.delegate = delegate;
         this.excludePatterns = excludePatterns;
+        if (delegate instanceof Ordered) {
+            this.order = ((Ordered)delegate).getOrder();
+        }
+        Order annotation = AnnotationUtils.getAnnotation(delegate.getClass(), Order.class);
+        if (annotation != null) {
+            this.order = annotation.value();
+        }
     }
 
     @Override
@@ -53,5 +67,10 @@ public class ExcludePatternFilterWrapper extends OncePerRequestFilter {
         } else {
             filterChain.doFilter(request, response);
         }
+    }
+
+    @Override
+    public int getOrder() {
+        return order;
     }
 }

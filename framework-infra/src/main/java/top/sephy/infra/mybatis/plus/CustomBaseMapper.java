@@ -15,27 +15,33 @@
  */
 package top.sephy.infra.mybatis.plus;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageHelper;
 
-import lombok.NonNull;
-import top.sephy.infra.entity.DeleteLog;
-import top.sephy.infra.mybatis.MyBatisConstants;
-import top.sephy.infra.mybatis.plus.intercepter.DeleteLogInterceptor;
+import io.micrometer.common.util.StringUtils;
+import top.sephy.infra.exception.SystemException;
 
 /**
  * @author sephy
  * @date 2020-03-07 23:33
  */
 public interface CustomBaseMapper<T> extends BaseMapper<T> {
+
+    default T loadById(Serializable id, String errorMsg) {
+        T obj = this.selectById(id);
+        if (obj != null) {
+            return obj;
+        }
+        throw new SystemException(StringUtils.isBlank(errorMsg) ? "数据不存在" : errorMsg);
+    }
 
     int upsert(T entity);
 
@@ -79,72 +85,5 @@ public interface CustomBaseMapper<T> extends BaseMapper<T> {
      */
     default List<T> selectAll() {
         return PageHelper.offsetPage(0, 10000).doSelectPage(() -> this.selectList(Wrappers.emptyWrapper()));
-    }
-
-    /**
-     *
-     * @param deleteIds
-     * @param createdBy
-     * @param updatedBy
-     * @return
-     * @deprecated use {@link DeleteLogInterceptor} instead
-     */
-    @Deprecated
-    int insertDeleteLogByIds(@Param("deleteIds") Collection<Long> deleteIds,
-            @Param(value = MyBatisConstants.PARAM_CREATED_BY) Long createdBy,
-            @Param(MyBatisConstants.PARAM_UPDATED_BY) Long updatedBy);
-
-    /**
-     *
-     * @param queryWrapper
-     * @param createdBy
-     * @param updatedBy
-     * @return
-     * @deprecated use {@link DeleteLogInterceptor} instead
-     */
-    @Deprecated
-    int insertDeleteLogByQueryWrapper(@Param("ew") Wrapper<T> queryWrapper,
-            @Param(value = MyBatisConstants.PARAM_CREATED_BY) Long createdBy,
-            @Param(MyBatisConstants.PARAM_UPDATED_BY) Long updatedBy);
-
-    /**
-     * 物理删除前先插入删除日志
-     * 
-     * @param id
-     * @return
-     * @deprecated use {@link DeleteLogInterceptor} instead
-     */
-    @Deprecated
-    default int deleteAndSaveDeleteLogById(@NonNull Long id) {
-        this.insertDeleteLogByIds(List.of(id), null, null);
-        return this.deleteById(id);
-    }
-
-    /**
-     * 物理删除前先插入删除日志
-     *
-     * @param ids
-     * @return
-     * @deprecated use {@link DeleteLogInterceptor} instead
-     */
-    @Deprecated
-    default int deleteAndSaveDeleteLogByIds(@NonNull Collection<Long> ids) {
-        DeleteLog deleteLog = new DeleteLog();
-        deleteLog.setDeleteIds(ids);
-        this.insertDeleteLogByIds(ids, null, null);
-        return this.deleteBatchIds(ids);
-    }
-
-    /**
-     * 物理删除前先插入删除日志
-     *
-     * @param ids
-     * @return
-     * @deprecated use {@link DeleteLogInterceptor} instead
-     */
-    @Deprecated
-    default int deleteAndSaveDeleteLogByQueryWrapper(@NonNull Wrapper<T> queryWrapper) {
-        this.insertDeleteLogByQueryWrapper(queryWrapper, null, null);
-        return this.delete(queryWrapper);
     }
 }

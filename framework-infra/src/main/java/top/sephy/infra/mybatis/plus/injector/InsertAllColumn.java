@@ -73,7 +73,7 @@ public class InsertAllColumn extends AbstractMethod {
     }
 
     /**
-     * @param name                      方法名
+     * @param name 方法名
      * @param ignoreAutoIncrementColumn 是否忽略自增长主键字段
      * @since 3.5.4
      */
@@ -87,11 +87,10 @@ public class InsertAllColumn extends AbstractMethod {
         KeyGenerator keyGenerator = NoKeyGenerator.INSTANCE;
 
         String columnScript = SqlScriptUtils.convertTrim(getAllInsertSqlColumn(tableInfo, ignoreAutoIncrementColumn),
-                LEFT_BRACKET, RIGHT_BRACKET, null, COMMA);
+            LEFT_BRACKET, RIGHT_BRACKET, null, COMMA);
         String valuesScript = LEFT_BRACKET + NEWLINE + SqlScriptUtils
-                .convertTrim(getAllInsertSqlProperty(tableInfo, null, ignoreAutoIncrementColumn), null, null, null,
-                        COMMA)
-                + NEWLINE + RIGHT_BRACKET;
+            .convertTrim(getAllInsertSqlProperty(tableInfo, null, ignoreAutoIncrementColumn), null, null, null, COMMA)
+            + NEWLINE + RIGHT_BRACKET;
         String keyProperty = null;
         String keyColumn = null;
         // 表包含主键处理逻辑,如果不包含主键当普通字段处理
@@ -111,18 +110,18 @@ public class InsertAllColumn extends AbstractMethod {
         String sql = String.format(SQL, tableInfo.getTableName(), columnScript, valuesScript);
         SqlSource sqlSource = super.createSqlSource(configuration, sql, modelClass);
         return this.addInsertMappedStatement(mapperClass, modelClass, methodName, sqlSource, keyGenerator, keyProperty,
-                keyColumn);
+            keyColumn);
     }
 
     String getAllInsertSqlColumn(TableInfo tableInfo, boolean ignoreAutoIncrementColumn) {
         List<TableFieldInfo> fieldList = tableInfo.getFieldList();
         if (ignoreAutoIncrementColumn && tableInfo.getIdType() == IdType.AUTO) {
             return fieldList.stream().map(TableFieldInfo::getInsertSqlColumn).filter(Objects::nonNull)
-                    .collect(joining(NEWLINE));
+                .collect(joining(NEWLINE));
         }
 
         return tableInfo.getKeyInsertSqlColumn(false, EMPTY, true) + fieldList.stream()
-                .map(TableFieldInfo::getInsertSqlColumn).filter(Objects::nonNull).collect(joining(NEWLINE));
+            .map(TableFieldInfo::getInsertSqlColumn).filter(Objects::nonNull).collect(joining(NEWLINE));
     }
 
     String getAllInsertSqlProperty(TableInfo tableInfo, final String prefix, boolean ignoreAutoIncrementColumn) {
@@ -130,10 +129,10 @@ public class InsertAllColumn extends AbstractMethod {
         final String newPrefix = prefix == null ? EMPTY : prefix;
         if (ignoreAutoIncrementColumn && tableInfo.getIdType() == IdType.AUTO) {
             return fieldList.stream().map(i -> getInsertSqlProperty(i, prefix)).filter(Objects::nonNull)
-                    .collect(joining(NEWLINE));
+                .collect(joining(NEWLINE));
         }
         return getKeyInsertSqlProperty(tableInfo, false, newPrefix, true) + fieldList.stream()
-                .map(i -> getInsertSqlProperty(i, newPrefix)).filter(Objects::nonNull).collect(joining(NEWLINE));
+            .map(i -> getInsertSqlProperty(i, newPrefix)).filter(Objects::nonNull).collect(joining(NEWLINE));
     }
 
     String getInsertSqlProperty(TableFieldInfo fieldInfo, final String prefix) {
@@ -142,7 +141,7 @@ public class InsertAllColumn extends AbstractMethod {
     }
 
     public String getKeyInsertSqlProperty(TableInfo tableInfo, final boolean batch, final String prefix,
-            final boolean newLine) {
+        final boolean newLine) {
         final String newPrefix = prefix == null ? EMPTY : prefix;
         if (tableInfo.havePK()) {
             final String prefixKeyProperty = newPrefix + tableInfo.getKeyProperty();

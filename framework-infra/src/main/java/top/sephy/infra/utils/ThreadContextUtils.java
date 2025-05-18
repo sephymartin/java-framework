@@ -27,7 +27,7 @@ public abstract class ThreadContextUtils {
     private static final ThreadLocal<ThreadContext> INSTANCE = new InheritableThreadLocal<>();
 
     public static <E> E getUserId() {
-        return (E) getContext().getUserId();
+        return (E)getContext().getUserId();
     }
 
     public static <E> void setUserId(E userId) {

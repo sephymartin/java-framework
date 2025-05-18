@@ -23,8 +23,7 @@ public class ServiceException extends RuntimeException {
 
     private static final long serialVersionUID = 3007273321183731025L;
 
-    public ServiceException() {
-    }
+    public ServiceException() {}
 
     public ServiceException(String message) {
         super(message);

@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
  * 自动维护创建时间
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(value = { ElementType.FIELD })
+@Target(value = {ElementType.FIELD})
 public @interface CreatedTime {
 
 }

@@ -36,34 +36,34 @@ public class InsertDeleteLogById extends AbstractMethod {
     public static String DESC = "插入一条删除记录";
 
     public static String SCRIPT = """
-            <script>
-                INSERT INTO delete_log
-                <trim prefix="(" suffix=")" suffixOverrides=",">
-                    <if test="id != null">
-                        id,
-                    </if>
-                    table_name,
-                    <if test="dataId != null">data_id,</if>
-                    <if test="deleteContent != null">delete_content,</if>
-                    <if test="createdBy != null">created_by,</if>
-                    <if test="createdTime != null">created_time,</if>
-                    <if test="updatedBy != null">updated_by,</if>
-                    <if test="updatedTime != null">updated_time,</if>
-                </trim>
-                VALUES (
-                <trim suffixOverrides=",">
-                    <if test="id != null"> #{id},</if>
-                    '%s',
-                    <if test="dataId != null">#{dataId},</if>
-                    <if test="deleteContent != null">#{deleteContent},</if>
-                    <if test="createdBy != null">#{createdBy},</if>
-                    <if test="createdTime != null">#{createdTime},</if>
-                    <if test="updatedBy != null">#{updatedBy},</if>
-                    <if test="updatedTime != null">#{updatedTime},</if>
-                </trim>
-                )
-            </script>
-            """;
+        <script>
+            INSERT INTO delete_log
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="id != null">
+                    id,
+                </if>
+                table_name,
+                <if test="dataId != null">data_id,</if>
+                <if test="deleteContent != null">delete_content,</if>
+                <if test="createdBy != null">created_by,</if>
+                <if test="createdTime != null">created_time,</if>
+                <if test="updatedBy != null">updated_by,</if>
+                <if test="updatedTime != null">updated_time,</if>
+            </trim>
+            VALUES (
+            <trim suffixOverrides=",">
+                <if test="id != null"> #{id},</if>
+                '%s',
+                <if test="dataId != null">#{dataId},</if>
+                <if test="deleteContent != null">#{deleteContent},</if>
+                <if test="createdBy != null">#{createdBy},</if>
+                <if test="createdTime != null">#{createdTime},</if>
+                <if test="updatedBy != null">#{updatedBy},</if>
+                <if test="updatedTime != null">#{updatedTime},</if>
+            </trim>
+            )
+        </script>
+        """;
 
     public InsertDeleteLogById() {
         super(METHOD);
@@ -79,6 +79,6 @@ public class InsertDeleteLogById extends AbstractMethod {
         String sql = String.format(SCRIPT, tableInfo.getTableName());
         SqlSource sqlSource = super.createSqlSource(configuration, sql, deleteLogClass);
         return this.addInsertMappedStatement(mapperClass, deleteLogClass, methodName, sqlSource, keyGenerator,
-                keyProperty, keyColumn);
+            keyProperty, keyColumn);
     }
 }

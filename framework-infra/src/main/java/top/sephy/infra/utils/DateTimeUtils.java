@@ -56,11 +56,11 @@ public abstract class DateTimeUtils {
 
     public static int toDateKey(LocalDate localDate) {
         return localDate.getYear() * YEAR_MULTI_POW + localDate.getMonthValue() * MONTH_MULTI_POW
-                + localDate.getDayOfMonth();
+            + localDate.getDayOfMonth();
     }
 
     public static int computeDayInterval(int lesserDateKey, int greaterDateKey) {
-        return (int) ChronoUnit.DAYS.between(toLocalDate(lesserDateKey), toLocalDate(greaterDateKey));
+        return (int)ChronoUnit.DAYS.between(toLocalDate(lesserDateKey), toLocalDate(greaterDateKey));
     }
 
     public static LocalDate toLocalDate(int dateKey) {
@@ -76,8 +76,7 @@ public abstract class DateTimeUtils {
 
     public static int toTimeKey(LocalTime localTime) {
         return localTime == null ? UNKNOWN
-                : localTime.getHour() * YEAR_MULTI_POW + localTime.getMinute() * MONTH_MULTI_POW
-                        + localTime.getSecond();
+            : localTime.getHour() * YEAR_MULTI_POW + localTime.getMinute() * MONTH_MULTI_POW + localTime.getSecond();
     }
 
     public static LocalDate toLocalDate(Date date) {

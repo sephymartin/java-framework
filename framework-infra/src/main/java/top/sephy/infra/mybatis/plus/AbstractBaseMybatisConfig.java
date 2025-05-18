@@ -36,8 +36,8 @@ import top.sephy.infra.utils.ThreadContextUtils;
 
 public abstract class AbstractBaseMybatisConfig {
 
-    static DefaultConversionService CONVERSION_SERVICE = (DefaultConversionService) DefaultConversionService
-            .getSharedInstance();
+    static DefaultConversionService CONVERSION_SERVICE =
+        (DefaultConversionService)DefaultConversionService.getSharedInstance();
 
     static {
         // see
@@ -83,8 +83,8 @@ public abstract class AbstractBaseMybatisConfig {
     }
 
     // @Bean
-    public QueryConditionExtractorInterceptor queryConditionExtractorInterceptor(
-            QueryContextExtractor queryContextExtractor) {
+    public QueryConditionExtractorInterceptor
+        queryConditionExtractorInterceptor(QueryContextExtractor queryContextExtractor) {
         return new QueryConditionExtractorInterceptor(queryContextExtractor);
     }
 

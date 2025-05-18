@@ -15,7 +15,6 @@
  */
 package top.sephy.infra.entity;
 
-
 import com.baomidou.mybatisplus.annotation.TableLogic;
 
 import lombok.Data;

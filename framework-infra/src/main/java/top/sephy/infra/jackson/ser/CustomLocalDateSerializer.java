@@ -34,8 +34,8 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 public class CustomLocalDateSerializer extends StdSerializer<LocalDate> implements ContextualSerializer {
     private static final long serialVersionUID = -3352134288289600043L;
 
-    public static final CustomLocalDateSerializer INSTANCE = new CustomLocalDateSerializer(null, null,
-            JsonFormat.Shape.NUMBER_INT);
+    public static final CustomLocalDateSerializer INSTANCE =
+        new CustomLocalDateSerializer(null, null, JsonFormat.Shape.NUMBER_INT);
 
     private final Boolean _useTimestamp;
 
@@ -52,7 +52,7 @@ public class CustomLocalDateSerializer extends StdSerializer<LocalDate> implemen
 
     @Override
     public JsonSerializer<?> createContextual(SerializerProvider prov, BeanProperty property)
-            throws JsonMappingException {
+        throws JsonMappingException {
         JsonFormat.Value format = findFormatOverrides(prov, property, handledType());
         if (format != null) {
             Boolean useTimestamp = null;
@@ -86,7 +86,7 @@ public class CustomLocalDateSerializer extends StdSerializer<LocalDate> implemen
 
     @Override
     protected JsonFormat.Value findFormatOverrides(SerializerProvider provider, BeanProperty prop,
-            Class<?> typeForDefaults) {
+        Class<?> typeForDefaults) {
         if (prop != null) {
             return prop.findPropertyFormat(provider.getConfig(), typeForDefaults);
         }

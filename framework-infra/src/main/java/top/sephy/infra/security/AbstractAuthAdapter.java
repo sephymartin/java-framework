@@ -18,11 +18,11 @@ package top.sephy.infra.security;
 import top.sephy.infra.auth.AuthenticationAdapter;
 import top.sephy.infra.auth.AuthenticationInfo;
 
-public abstract class AbstractAuthAdapter<T> implements AuthenticationAdapter<T> {
+public abstract class AbstractAuthAdapter implements AuthenticationAdapter {
 
     @Override
-    public T getCurrentUserId() {
-        AuthenticationInfo<T> authenticationInfo = getCurrentUserInfo();
+    public Long getCurrentUserId() {
+        AuthenticationInfo authenticationInfo = getCurrentUserInfo();
         if (authenticationInfo != null) {
             return authenticationInfo.getUserId();
         }

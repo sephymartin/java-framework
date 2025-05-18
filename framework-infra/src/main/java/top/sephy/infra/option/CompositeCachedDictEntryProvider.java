@@ -29,7 +29,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class CompositeCachedDictEntryProvider<K, V>
-        implements DictEntryProvider<K, V>, ApplicationListener<ContextRefreshedEvent> {
+    implements DictEntryProvider<K, V>, ApplicationListener<ContextRefreshedEvent> {
 
     private final ObjectProvider<List<DictEntryProvider<K, V>>> objectProvider;
 

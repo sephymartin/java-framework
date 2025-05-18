@@ -58,7 +58,7 @@ public abstract class KeywordUtils {
             KeywordTreeNode parent = null;
 
             char first = chars[i];
-            node = keywords.get((int) first);
+            node = keywords.get((int)first);
 
             if (node != null) {
                 sb.append(node.character);
@@ -68,7 +68,7 @@ public abstract class KeywordUtils {
                 for (; j < len; j++) {
                     char c = chars[j];
                     tmpMap = parent.getChildren();
-                    node = tmpMap.get((int) c);
+                    node = tmpMap.get((int)c);
 
                     if (node == null) {
                         if (parent.isEnd) {
@@ -124,11 +124,11 @@ public abstract class KeywordUtils {
                     tmpMap = rootMap;
                 }
 
-                node = tmpMap.get((int) c);
+                node = tmpMap.get((int)c);
 
                 if (node == null) {
                     node = new KeywordTreeNode(c, i);
-                    tmpMap.put((int) c, node);
+                    tmpMap.put((int)c, node);
                 }
 
                 if (!node.isEnd) {

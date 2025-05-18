@@ -39,8 +39,8 @@ public class UpdateAllColumnById extends AbstractMethod {
         SqlMethod sqlMethod = SqlMethod.UPDATE_BY_ID;
         final String additional = optlockVersion(tableInfo) + tableInfo.getLogicDeleteSql(true, true);
         String sql = String.format(sqlMethod.getSql(), tableInfo.getTableName(),
-                sqlSet(tableInfo.isWithLogicDelete(), false, tableInfo, false, ENTITY, ENTITY_DOT),
-                tableInfo.getKeyColumn(), ENTITY_DOT + tableInfo.getKeyProperty(), additional);
+            sqlSet(tableInfo.isWithLogicDelete(), false, tableInfo, false, ENTITY, ENTITY_DOT),
+            tableInfo.getKeyColumn(), ENTITY_DOT + tableInfo.getKeyProperty(), additional);
         SqlSource sqlSource = super.createSqlSource(configuration, sql, modelClass);
         return addUpdateMappedStatement(mapperClass, modelClass, methodName, sqlSource);
     }

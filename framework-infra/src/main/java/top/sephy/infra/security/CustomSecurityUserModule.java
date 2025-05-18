@@ -37,12 +37,12 @@ public class CustomSecurityUserModule extends SimpleModule {
     public static class CustomSecurityUserModuleMixIn<T> {
         @JsonCreator
         public CustomSecurityUserModuleMixIn(@JsonProperty("username") String username,
-                @JsonProperty("password") String password, @JsonProperty("enabled") boolean enabled,
-                @JsonProperty("accountNonExpired") boolean accountNonExpired,
-                @JsonProperty("credentialsNonExpired") boolean credentialsNonExpired,
-                @JsonProperty("accountNonLocked") boolean accountNonLocked,
-                @JsonProperty("authorities") Collection<? extends GrantedAuthority> authorities,
-                @JsonProperty("otherInfo") Map<String, Object> otherInfo) {
+            @JsonProperty("password") String password, @JsonProperty("enabled") boolean enabled,
+            @JsonProperty("accountNonExpired") boolean accountNonExpired,
+            @JsonProperty("credentialsNonExpired") boolean credentialsNonExpired,
+            @JsonProperty("accountNonLocked") boolean accountNonLocked,
+            @JsonProperty("authorities") Collection<? extends GrantedAuthority> authorities,
+            @JsonProperty("otherInfo") Map<String, Object> otherInfo) {
             log.info("ViewportSizeMixIn called!");
         }
     }

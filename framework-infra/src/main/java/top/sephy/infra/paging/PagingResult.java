@@ -47,14 +47,14 @@ public class PagingResult<T> implements Iterable<T> {
 
     @JsonCreator
     public PagingResult(@JsonProperty("list") List<T> list, @JsonProperty("pageNum") int pageNum,
-            @JsonProperty("pageSize") int pageSize, @JsonProperty("total") long total) {
+        @JsonProperty("pageSize") int pageSize, @JsonProperty("total") long total) {
         Assert.isTrue(pageNum > 0, "pageNum must be positive.");
         Assert.isTrue(pageSize > 0, "pageSize must be positive.");
         Assert.isTrue(total >= 0, "totalElements must net be negative.");
         this.pageNum = pageNum;
         this.pageSize = pageSize;
         this.total = total;
-        this.totalPages = (int) (total / pageSize + (total % pageSize == 0 ? 0 : 1));
+        this.totalPages = (int)(total / pageSize + (total % pageSize == 0 ? 0 : 1));
         this.list = list == null ? Collections.EMPTY_LIST : list;
     }
 
@@ -122,7 +122,7 @@ public class PagingResult<T> implements Iterable<T> {
     }
 
     public static <T> PagingResult<T> fromPage(com.baomidou.mybatisplus.extension.plugins.pagination.Page<T> page) {
-        return new PagingResult<T>(page.getRecords(), (int) page.getCurrent(), (int) page.getSize(), page.getTotal());
+        return new PagingResult<T>(page.getRecords(), (int)page.getCurrent(), (int)page.getSize(), page.getTotal());
     }
 
     public static <T> PagingResult<T> empty(int pageNum, int pageSize) {

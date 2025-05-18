@@ -48,11 +48,11 @@ public abstract class SpELUtils {
 
         String className = target.getClass().getName();
         final Signature signature = joinPoint.getSignature();
-        String[] paramNames = ((CodeSignature) signature).getParameterNames();
+        String[] paramNames = ((CodeSignature)signature).getParameterNames();
         String methodName = signature.getName();
         String contentKey = className + "#" + methodName;
         final Expression contentTemplate = EXPRESSION_CACHE.computeIfAbsent(contentKey,
-                k -> EXPRESSION_PARSER.parseExpression(template, PARSER_CONTEXT));
+            k -> EXPRESSION_PARSER.parseExpression(template, PARSER_CONTEXT));
 
         // 将方法参数添加到上下文中
         final Object[] paramValues = joinPoint.getArgs();

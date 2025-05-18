@@ -48,13 +48,13 @@ public class CustomPOJOSerializerModifier extends BeanSerializerModifier {
     private final ConversionService conversionService;
 
     public CustomPOJOSerializerModifier(DictEntryProvider<Object, Object> dictEntryProvider,
-            ConversionService conversionService) {
+        ConversionService conversionService) {
         this.dictEntryProvider = dictEntryProvider;
         this.conversionService = conversionService;
     }
 
     public List<BeanPropertyWriter> changeProperties(SerializationConfig config, BeanDescription beanDesc,
-            List<BeanPropertyWriter> beanProperties) {
+        List<BeanPropertyWriter> beanProperties) {
 
         Class<?> beanClass = beanDesc.getBeanClass();
 

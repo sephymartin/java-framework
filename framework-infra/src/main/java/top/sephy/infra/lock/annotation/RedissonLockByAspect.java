@@ -40,18 +40,17 @@ public class RedissonLockByAspect {
     }
 
     @Pointcut("@annotation(top.sephy.infra.lock.annotation.RedisLock)")
-    public void redisLock() {
-    }
+    public void redisLock() {}
 
     @Around("redisLock()")
     public Object doWithLock(ProceedingJoinPoint joinPoint) throws Throwable {
 
-        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        MethodSignature signature = (MethodSignature)joinPoint.getSignature();
         Method method = signature.getMethod();
         RedisLock redisLock = method.getAnnotation(RedisLock.class);
 
-        String lockKey = redisLock.keyType() == KeyType.DEFAULT ? redisLock.key()
-                : SpELUtils.parse(redisLock.key(), joinPoint);
+        String lockKey =
+            redisLock.keyType() == KeyType.DEFAULT ? redisLock.key() : SpELUtils.parse(redisLock.key(), joinPoint);
 
         LockMode lockType = redisLock.lockType();
 
@@ -99,7 +98,7 @@ public class RedissonLockByAspect {
      * @return
      */
     private Object proceedWithLockInterruptibly(ProceedingJoinPoint joinPoint, RLock lock, RedisLock redisLock)
-            throws InterruptedException {
+        throws InterruptedException {
         long leaseTime = redisLock.leaseTime();
         if (leaseTime > 0) {
             lock.lockInterruptibly(leaseTime, redisLock.timeUnit());
@@ -124,7 +123,7 @@ public class RedissonLockByAspect {
      * @return
      */
     private Object proceedTryLock(ProceedingJoinPoint joinPoint, RLock lock, RedisLock redisLock)
-            throws InterruptedException {
+        throws InterruptedException {
         long waitTime = redisLock.lockWaitTime();
         long leaseTime = redisLock.leaseTime();
         boolean locked = false;

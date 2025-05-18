@@ -24,6 +24,5 @@ import java.lang.annotation.Target;
  * 创建人
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(value = { ElementType.FIELD })
-public @interface CreatorId {
-}
+@Target(value = {ElementType.FIELD})
+public @interface CreatorId {}

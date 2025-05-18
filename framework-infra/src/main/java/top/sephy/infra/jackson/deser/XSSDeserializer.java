@@ -32,8 +32,7 @@ public class XSSDeserializer extends AbstractXSSDeserializer {
     private static final long serialVersionUID = -3922759210715477667L;
     public static XSSDeserializer INSTANCE = new XSSDeserializer();
 
-    public XSSDeserializer() {
-    }
+    public XSSDeserializer() {}
 
     @Override
     protected String doDeserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JacksonException {

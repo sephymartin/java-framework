@@ -46,7 +46,7 @@ import top.sephy.infra.mybatis.audit.annotaton.ModifiedTime;
 import top.sephy.infra.mybatis.audit.annotaton.ModifierId;
 import top.sephy.infra.mybatis.audit.annotaton.ModifierName;
 
-@Intercepts({ @Signature(type = Executor.class, method = "update", args = { MappedStatement.class, Object.class }) })
+@Intercepts({@Signature(type = Executor.class, method = "update", args = {MappedStatement.class, Object.class})})
 public class AutoFillInterceptor implements Interceptor {
 
     private ConcurrentHashMap<Class<?>, AuditingConfig> auditingConfigMap = new ConcurrentHashMap<>();
@@ -64,7 +64,7 @@ public class AutoFillInterceptor implements Interceptor {
     public Object intercept(Invocation invocation) throws Throwable {
         Object[] args = invocation.getArgs();
 
-        MappedStatement mappedStatement = (MappedStatement) args[0];
+        MappedStatement mappedStatement = (MappedStatement)args[0];
 
         if (args.length > 1) {
             Object arg = args[1];
@@ -77,9 +77,9 @@ public class AutoFillInterceptor implements Interceptor {
                 // 参数包装成MapperMethod.ParamMap（HashMap）,否则参数类型直接返回所传当前参数，
                 // 可看org.apache.ibatis.reflection.ParamNameResolver.wrapToMapIfCollection
                 if (MapperMethod.ParamMap.class.isAssignableFrom(clazz)) {
-                    MapperMethod.ParamMap<Object> paramMap = (MapperMethod.ParamMap<Object>) arg;
+                    MapperMethod.ParamMap<Object> paramMap = (MapperMethod.ParamMap<Object>)arg;
                     if (paramMap.containsKey("collection")) {
-                        Collection entityList = (Collection) paramMap.get("collection");
+                        Collection entityList = (Collection)paramMap.get("collection");
                         if (!CollectionUtils.isEmpty(entityList)) {
                             for (Object elem : entityList) {
                                 clazz = elem.getClass();
@@ -133,7 +133,7 @@ public class AutoFillInterceptor implements Interceptor {
             Field modifierIdField = config.getModifierIdField();
             Field modifierNameField = config.getModifierNameField();
             if (creatorIdField != null && creatorNameField != null || modifierIdField != null
-                    || modifierNameField != null) {
+                || modifierNameField != null) {
 
                 Object currentUserId = currentUserExtractor.getCurrentUserId();
                 Object currentUserName = currentUserExtractor.getCurrentUserName();
@@ -170,7 +170,7 @@ public class AutoFillInterceptor implements Interceptor {
         String name = field.getName();
         if (beanWrapper.getPropertyValue(name) == null) {
             if (field.getType() != value.getClass()
-                    && conversionService.canConvert(value.getClass(), field.getType())) {
+                && conversionService.canConvert(value.getClass(), field.getType())) {
                 value = conversionService.convert(value, field.getType());
             }
             beanWrapper.setPropertyValue(name, value);

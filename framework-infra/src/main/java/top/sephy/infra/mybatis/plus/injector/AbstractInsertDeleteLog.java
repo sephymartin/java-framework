@@ -37,22 +37,22 @@ public abstract class AbstractInsertDeleteLog extends AbstractMethod {
     @Serial
     private static final long serialVersionUID = -6584990316370685448L;
     public static String SCRIPT = """
-            <script>
-                INSERT INTO delete_log
-                <trim prefix="(" suffix=")" suffixOverrides=",">
-                    `table_name`, `data_id`, `delete_content`,
-                     <if test="createdBy != null">`created_by`,</if>
-                     <if test="updatedBy != null">`updated_by`,</if>
-                 </trim>
-                SELECT
-                <trim prefix="" suffix="" suffixOverrides=",">
-                    %s as `table_name`, %s as id, %s as delete_content,
-                    <if test="createdBy != null">${createdBy} as `created_by`,</if>
-                    <if test="updatedBy != null">${updatedBy} as `updated_by`,</if>
-                </trim>
-                FROM %s %s
-            </script>
-            """;
+        <script>
+            INSERT INTO delete_log
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                `table_name`, `data_id`, `delete_content`,
+                 <if test="createdBy != null">`created_by`,</if>
+                 <if test="updatedBy != null">`updated_by`,</if>
+             </trim>
+            SELECT
+            <trim prefix="" suffix="" suffixOverrides=",">
+                %s as `table_name`, %s as id, %s as delete_content,
+                <if test="createdBy != null">${createdBy} as `created_by`,</if>
+                <if test="updatedBy != null">${updatedBy} as `updated_by`,</if>
+            </trim>
+            FROM %s %s
+        </script>
+        """;
 
     public AbstractInsertDeleteLog(String method) {
         super(method);
@@ -88,7 +88,7 @@ public abstract class AbstractInsertDeleteLog extends AbstractMethod {
         String sql = String.format(SCRIPT, tableNameVal, idVal, deleteContentVal, tableName, whereExpression);
         SqlSource sqlSource = super.createSqlSource(configuration, sql, deleteLogClass);
         return this.addInsertMappedStatement(mapperClass, deleteLogClass, methodName, sqlSource, keyGenerator,
-                tableInfo.getKeyProperty(), tableInfo.getKeyColumn());
+            tableInfo.getKeyProperty(), tableInfo.getKeyColumn());
     }
 
     abstract String getWhereExpression(Class<?> mapperClass, Class<?> modelClass, TableInfo tableInfo);

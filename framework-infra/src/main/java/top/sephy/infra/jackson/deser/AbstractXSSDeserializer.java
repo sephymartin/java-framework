@@ -37,7 +37,7 @@ public abstract class AbstractXSSDeserializer extends StdDeserializer<String> im
 
     @Override
     public JsonDeserializer<?> createContextual(DeserializationContext ctxt, BeanProperty property)
-            throws JsonMappingException {
+        throws JsonMappingException {
 
         if (property != null) {
             XSSIgnore annotation = property.getAnnotation(XSSIgnore.class);
@@ -55,5 +55,5 @@ public abstract class AbstractXSSDeserializer extends StdDeserializer<String> im
     }
 
     protected abstract String doDeserialize(JsonParser p, DeserializationContext ctxt)
-            throws IOException, JacksonException;
+        throws IOException, JacksonException;
 }

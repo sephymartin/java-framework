@@ -35,76 +35,76 @@ public class LambdaQueryWrapperX<T> extends LambdaQueryWrapper<T> {
 
     public LambdaQueryWrapperX<T> likeIfPresent(SFunction<T, ?> column, String val) {
         if (StringUtils.hasText(val)) {
-            return (LambdaQueryWrapperX<T>) super.like(column, val);
+            return (LambdaQueryWrapperX<T>)super.like(column, val);
         }
         return this;
     }
 
     public LambdaQueryWrapperX<T> inIfPresent(SFunction<T, ?> column, Collection<?> values) {
         if (!CollectionUtils.isEmpty(values)) {
-            return (LambdaQueryWrapperX<T>) super.in(column, values);
+            return (LambdaQueryWrapperX<T>)super.in(column, values);
         }
         return this;
     }
 
     public LambdaQueryWrapperX<T> inIfPresent(SFunction<T, ?> column, Object... values) {
         if (!ArrayUtils.isEmpty(values)) {
-            return (LambdaQueryWrapperX<T>) super.in(column, values);
+            return (LambdaQueryWrapperX<T>)super.in(column, values);
         }
         return this;
     }
 
     public LambdaQueryWrapperX<T> eqIfPresent(SFunction<T, ?> column, Object val) {
         if (val != null) {
-            return (LambdaQueryWrapperX<T>) super.eq(column, val);
+            return (LambdaQueryWrapperX<T>)super.eq(column, val);
         }
         return this;
     }
 
     public LambdaQueryWrapperX<T> neIfPresent(SFunction<T, ?> column, Object val) {
         if (val != null) {
-            return (LambdaQueryWrapperX<T>) super.ne(column, val);
+            return (LambdaQueryWrapperX<T>)super.ne(column, val);
         }
         return this;
     }
 
     public LambdaQueryWrapperX<T> gtIfPresent(SFunction<T, ?> column, Object val) {
         if (val != null) {
-            return (LambdaQueryWrapperX<T>) super.gt(column, val);
+            return (LambdaQueryWrapperX<T>)super.gt(column, val);
         }
         return this;
     }
 
     public LambdaQueryWrapperX<T> geIfPresent(SFunction<T, ?> column, Object val) {
         if (val != null) {
-            return (LambdaQueryWrapperX<T>) super.ge(column, val);
+            return (LambdaQueryWrapperX<T>)super.ge(column, val);
         }
         return this;
     }
 
     public LambdaQueryWrapperX<T> ltIfPresent(SFunction<T, ?> column, Object val) {
         if (val != null) {
-            return (LambdaQueryWrapperX<T>) super.lt(column, val);
+            return (LambdaQueryWrapperX<T>)super.lt(column, val);
         }
         return this;
     }
 
     public LambdaQueryWrapperX<T> leIfPresent(SFunction<T, ?> column, Object val) {
         if (val != null) {
-            return (LambdaQueryWrapperX<T>) super.le(column, val);
+            return (LambdaQueryWrapperX<T>)super.le(column, val);
         }
         return this;
     }
 
     public LambdaQueryWrapperX<T> betweenIfPresent(SFunction<T, ?> column, Object val1, Object val2) {
         if (val1 != null && val2 != null) {
-            return (LambdaQueryWrapperX<T>) super.between(column, val1, val2);
+            return (LambdaQueryWrapperX<T>)super.between(column, val1, val2);
         }
         if (val1 != null) {
-            return (LambdaQueryWrapperX<T>) ge(column, val1);
+            return (LambdaQueryWrapperX<T>)ge(column, val1);
         }
         if (val2 != null) {
-            return (LambdaQueryWrapperX<T>) le(column, val2);
+            return (LambdaQueryWrapperX<T>)le(column, val2);
         }
         return this;
     }

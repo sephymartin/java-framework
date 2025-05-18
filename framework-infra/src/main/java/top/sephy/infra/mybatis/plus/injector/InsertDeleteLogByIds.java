@@ -27,11 +27,11 @@ public class InsertDeleteLogByIds extends AbstractInsertDeleteLog {
     public static String METHOD = "insertDeleteLogByIds";
 
     public static String WHERE_EXPRESSION = """
-            WHERE %s in
-            <foreach collection="deleteIds" item="_deleteId" open="(" separator="," close=")">
-                #{_deleteId}
-            </foreach>
-            """;
+        WHERE %s in
+        <foreach collection="deleteIds" item="_deleteId" open="(" separator="," close=")">
+            #{_deleteId}
+        </foreach>
+        """;
 
     public InsertDeleteLogByIds() {
         super(METHOD);

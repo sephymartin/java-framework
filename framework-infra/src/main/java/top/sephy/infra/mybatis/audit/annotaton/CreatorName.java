@@ -26,6 +26,5 @@ import java.lang.annotation.Target;
  * @author 夏铭
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(value = { ElementType.FIELD })
-public @interface CreatorName {
-}
+@Target(value = {ElementType.FIELD})
+public @interface CreatorName {}

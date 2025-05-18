@@ -43,7 +43,7 @@ public class JsonDesensitizeSerializer extends StdSerializer<String> implements 
 
     @Override
     public JsonSerializer<?> createContextual(SerializerProvider prov, BeanProperty property)
-            throws JsonMappingException {
+        throws JsonMappingException {
 
         JsonSerializer<?> ser = prov.findValueSerializer(String.class, property);
 

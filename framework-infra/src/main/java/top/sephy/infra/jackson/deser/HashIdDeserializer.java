@@ -54,7 +54,7 @@ public class HashIdDeserializer extends StdDeserializer<Long> implements Context
 
     @Override
     public JsonDeserializer<?> createContextual(DeserializationContext ctxt, BeanProperty property)
-            throws JsonMappingException {
+        throws JsonMappingException {
         JsonHashId jsonHashId = property.getAnnotation(JsonHashId.class);
         if (jsonHashId != null) {
             String salt = jsonHashId.salt();

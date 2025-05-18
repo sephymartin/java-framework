@@ -24,8 +24,7 @@ import java.util.Random;
  */
 public abstract class IPUtils {
 
-    private IPUtils() {
-    }
+    private IPUtils() {}
 
     public static String generateRandomIP() {
         Random r = new SecureRandom();

@@ -44,7 +44,7 @@ public abstract class RestTemplateUtils {
             return new HttpEntity(body, headers);
         }
         if (body instanceof Map) {
-            return new HttpEntity(mapToMultiValueMap((Map) body), headers);
+            return new HttpEntity(mapToMultiValueMap((Map)body), headers);
         }
         return new HttpEntity(body, headers);
     }
