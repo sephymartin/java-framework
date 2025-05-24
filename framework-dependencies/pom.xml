@@ -136,7 +136,7 @@
         <cleanthat.version>2.12</cleanthat.version>
         <mybatis-plus-spring-boot3-starter.version>3.5.7</mybatis-plus-spring-boot3-starter.version>
         <mybatis-spring-boot.version>3.0.4</mybatis-spring-boot.version>
-
+        <smart-doc-maven-plugin.version>3.0.5</smart-doc-maven-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -670,7 +670,9 @@
                     <version>${maven-surefire-plugin.version}</version>
                     <!-- https://allurereport.org/docs/junit5/ -->
                     <configuration>
-                        <argLine>-javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"</argLine>
+                        <argLine>
+                            -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+                        </argLine>
                         <testFailureIgnore>true</testFailureIgnore>
                     </configuration>
                     <dependencies>
