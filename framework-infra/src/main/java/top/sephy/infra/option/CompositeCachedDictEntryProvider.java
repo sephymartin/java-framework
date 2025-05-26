@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.checkerframework.checker.units.qual.K;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -28,14 +29,14 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
-public class CompositeCachedDictEntryProvider<K, V>
-    implements DictEntryProvider<K, V>, ApplicationListener<ContextRefreshedEvent> {
+public class CompositeCachedDictEntryProvider<V, L>
+    implements DictEntryProvider<V, L>, ApplicationListener<ContextRefreshedEvent> {
 
-    private final ObjectProvider<List<DictEntryProvider<K, V>>> objectProvider;
+    private final ObjectProvider<List<DictEntryProvider<V, L>>> objectProvider;
 
-    private final Map<String, List<DictEntry<K, V>>> dictCache = new ConcurrentHashMap<>();
+    private final Map<String, List<DictEntry<V, L>>> dictCache = new ConcurrentHashMap<>();
 
-    public CompositeCachedDictEntryProvider(ObjectProvider<List<DictEntryProvider<K, V>>> objectProvider) {
+    public CompositeCachedDictEntryProvider(ObjectProvider<List<DictEntryProvider<V, L>>> objectProvider) {
         this.objectProvider = objectProvider;
     }
 
@@ -45,21 +46,21 @@ public class CompositeCachedDictEntryProvider<K, V>
     }
 
     @Override
-    public Map<String, List<DictEntry<K, V>>> optionsMap() {
+    public Map<String, List<DictEntry<V, L>>> optionsMap() {
         return ImmutableMap.copyOf(dictCache);
     }
 
     @Override
-    public List<DictEntry<K, V>> options(String type) {
+    public List<DictEntry<V, L>> getOptionsByType(String type) {
         return dictCache.getOrDefault(type, Collections.emptyList());
     }
 
     public void refresh() {
-        List<DictEntryProvider<K, V>> ifAvailable = objectProvider.getIfAvailable();
+        List<DictEntryProvider<V, L>> ifAvailable = objectProvider.getIfAvailable();
         if (ifAvailable != null) {
-            for (DictEntryProvider<K, V> itemOptionProvider : ifAvailable) {
-                Map<String, List<DictEntry<K, V>>> tmp = itemOptionProvider.optionsMap();
-                for (Map.Entry<String, List<DictEntry<K, V>>> entry : tmp.entrySet()) {
+            for (DictEntryProvider<V, L> itemOptionProvider : ifAvailable) {
+                Map<String, List<DictEntry<V, L>>> tmp = itemOptionProvider.optionsMap();
+                for (Map.Entry<String, List<DictEntry<V, L>>> entry : tmp.entrySet()) {
                     dictCache.put(entry.getKey(), ImmutableList.copyOf(entry.getValue()));
                 }
             }

@@ -53,7 +53,7 @@ public class DictEntryTranslator {
                 if (StringUtils.hasText(valueFieldName) && StringUtils.hasText(keyFieldName)) {
                     Object keyPropertyValue = beanWrapper.getPropertyValue(keyFieldName);
                     if (keyPropertyValue != null) {
-                        Object value = optionProvider.option(type, keyPropertyValue, meta.isCompareWithString(),
+                        Object value = optionProvider.lookUpOption(type, keyPropertyValue, meta.isCompareWithString(),
                             meta.isCaseSensitive());
                         if (value != null) {
                             beanWrapper.setPropertyValue(valueFieldName, value);

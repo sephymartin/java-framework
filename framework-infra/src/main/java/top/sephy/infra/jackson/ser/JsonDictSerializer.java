@@ -67,7 +67,7 @@ public class JsonDictSerializer extends StdSerializer<Object> {
             Object[] objects = (Object[])value;
             writeArray(gen, objects, annotation, defaultLabelVal);
         } else {
-            DictEntry<Object, Object> option = dictEntryProvider.option(annotation.type(), value,
+            DictEntry<Object, Object> option = dictEntryProvider.lookUpOption(annotation.type(), value,
                 annotation.compareWithString(), annotation.caseSensitive());
             Object val = option == null ? defaultLabelVal : option.getLabel();
             if (val == null) {
@@ -85,7 +85,7 @@ public class JsonDictSerializer extends StdSerializer<Object> {
         throws IOException {
         gen.writeStartArray();
         for (Object orig : array) {
-            DictEntry<Object, Object> option = dictEntryProvider.option(annotation.type(), orig,
+            DictEntry<Object, Object> option = dictEntryProvider.lookUpOption(annotation.type(), orig,
                 annotation.compareWithString(), annotation.caseSensitive());
             Object val = option == null ? defaultLabelVal : option.getLabel();
             if (val == null) {
