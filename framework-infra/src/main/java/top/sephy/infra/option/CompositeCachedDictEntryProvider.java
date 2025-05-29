@@ -16,12 +16,14 @@
 package top.sephy.infra.option;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.checkerframework.checker.units.qual.K;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -29,40 +31,71 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
-public class CompositeCachedDictEntryProvider<V, L>
-    implements DictEntryProvider<V, L>, ApplicationListener<ContextRefreshedEvent> {
+import lombok.NonNull;
 
-    private final ObjectProvider<List<DictEntryProvider<V, L>>> objectProvider;
+public class CompositeCachedDictEntryProvider implements ApplicationListener<ContextRefreshedEvent> {
 
-    private final Map<String, List<DictEntry<V, L>>> dictCache = new ConcurrentHashMap<>();
+    private final ObjectProvider<MultiDictEntryListProvider> multiListobjectProvider;
 
-    public CompositeCachedDictEntryProvider(ObjectProvider<List<DictEntryProvider<V, L>>> objectProvider) {
-        this.objectProvider = objectProvider;
+    private final ObjectProvider<DictEntryListProvider> singleListProvider;
+
+    private final Map<String, List<DictEntry<Object, Object>>> dictCache = new ConcurrentHashMap<>();
+
+    public CompositeCachedDictEntryProvider(ObjectProvider<MultiDictEntryListProvider> multiListobjectProvider,
+        ObjectProvider<DictEntryListProvider> singleListProvider) {
+        this.multiListobjectProvider = multiListobjectProvider;
+        this.singleListProvider = singleListProvider;
     }
 
-    @Override
     public Set<String> types() {
         return dictCache.keySet();
     }
 
-    @Override
-    public Map<String, List<DictEntry<V, L>>> optionsMap() {
+    public Map<String, List<DictEntry<Object, Object>>> optionsMap() {
         return ImmutableMap.copyOf(dictCache);
     }
 
-    @Override
-    public List<DictEntry<V, L>> getOptionsByType(String type) {
+    public List<DictEntry<Object, Object>> getOptionsByType(String type) {
         return dictCache.getOrDefault(type, Collections.emptyList());
     }
 
-    public void refresh() {
-        List<DictEntryProvider<V, L>> ifAvailable = objectProvider.getIfAvailable();
-        if (ifAvailable != null) {
-            for (DictEntryProvider<V, L> itemOptionProvider : ifAvailable) {
-                Map<String, List<DictEntry<V, L>>> tmp = itemOptionProvider.optionsMap();
-                for (Map.Entry<String, List<DictEntry<V, L>>> entry : tmp.entrySet()) {
-                    dictCache.put(entry.getKey(), ImmutableList.copyOf(entry.getValue()));
+    public DictEntry<Object, Object> lookUpOption(@NonNull String type, @NonNull Object valueToLookUp,
+        boolean compareWithString, boolean caseSensitive) {
+        List<DictEntry<Object, Object>> options = getOptionsByType(type);
+        for (DictEntry<Object, Object> option : options) {
+            Object valueToCompare = option.getValue();
+            if (compareWithString) {
+                String k1 = String.valueOf(valueToLookUp);
+                String k2 = String.valueOf(valueToCompare);
+                if (caseSensitive && StringUtils.equals(k1, k2)) {
+                    return option;
+                } else if (!caseSensitive && StringUtils.equalsIgnoreCase(k1, k2)) {
+                    return option;
                 }
+            } else if (Objects.equals(valueToLookUp, valueToCompare)) {
+                return option;
+            }
+        }
+        return null;
+    }
+
+    public String getLabel(@NonNull String type, @NonNull Object valueToLookUp, boolean compareWithString,
+        boolean caseSensitive, String defaultValue) {
+        DictEntry<Object, Object> option = lookUpOption(type, valueToLookUp, compareWithString, caseSensitive);
+        if (option != null && option.getLabel() != null) {
+            return String.valueOf(option.getLabel());
+        }
+        return defaultValue;
+    }
+
+    public void refresh() {
+        Iterator<MultiDictEntryListProvider> iterator = multiListobjectProvider.stream().iterator();
+        singleListProvider.stream().forEach(provider -> dictCache.put(provider.getType(), provider.getOptions()));
+        while (iterator.hasNext()) {
+            MultiDictEntryListProvider<Object, Object> provider = iterator.next();
+            Map<String, List<DictEntry<Object, Object>>> tmp = provider.optionsMap();
+            for (Map.Entry<String, List<DictEntry<Object, Object>>> entry : tmp.entrySet()) {
+                dictCache.put(entry.getKey(), ImmutableList.copyOf(entry.getValue()));
             }
         }
     }

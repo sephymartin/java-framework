@@ -33,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 import top.sephy.infra.jackson.annotation.JsonDict;
 import top.sephy.infra.jackson.annotation.JsonDictMeta;
 import top.sephy.infra.jackson.ser.JsonDictSerializer;
-import top.sephy.infra.option.DictEntryProvider;
+import top.sephy.infra.option.CompositeCachedDictEntryProvider;
 
 /**
  * 实现 {@link JsonDict} 注解, 在序列化时自动添加字典标签
@@ -43,11 +43,11 @@ public class CustomPOJOSerializerModifier extends BeanSerializerModifier {
 
     private final ConcurrentMap<Class<?>, Map<String, JsonDictMeta>> metaMap = new ConcurrentHashMap<>();
 
-    private final DictEntryProvider<Object, Object> dictEntryProvider;
+    private final CompositeCachedDictEntryProvider dictEntryProvider;
 
     private final ConversionService conversionService;
 
-    public CustomPOJOSerializerModifier(DictEntryProvider<Object, Object> dictEntryProvider,
+    public CustomPOJOSerializerModifier(CompositeCachedDictEntryProvider dictEntryProvider,
         ConversionService conversionService) {
         this.dictEntryProvider = dictEntryProvider;
         this.conversionService = conversionService;

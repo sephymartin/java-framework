@@ -15,20 +15,11 @@
  */
 package top.sephy.infra.option;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.util.List;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class DictEntry<VALUE, LABEL> {
+public interface DictEntryListProvider<V, L> {
 
-    private VALUE value;
+    String getType();
 
-    private LABEL label;
-
-    private Boolean disabled;
-
-    private String type;
+    List<DictEntry<V, L>> getOptions();
 }

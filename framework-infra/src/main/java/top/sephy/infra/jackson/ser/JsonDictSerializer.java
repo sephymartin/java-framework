@@ -27,20 +27,20 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import lombok.NonNull;
 import top.sephy.infra.jackson.annotation.JsonDict;
 import top.sephy.infra.jackson.annotation.JsonDictMeta;
+import top.sephy.infra.option.CompositeCachedDictEntryProvider;
 import top.sephy.infra.option.DictEntry;
-import top.sephy.infra.option.DictEntryProvider;
 
 public class JsonDictSerializer extends StdSerializer<Object> {
 
     private static final long serialVersionUID = 2328857487201823680L;
 
-    private final DictEntryProvider<Object, Object> dictEntryProvider;
+    private final CompositeCachedDictEntryProvider dictEntryProvider;
 
     private final JsonDictMeta jsonDictMeta;
 
     private final ConversionService conversionService;
 
-    public JsonDictSerializer(@NonNull DictEntryProvider<Object, Object> dictEntryProvider,
+    public JsonDictSerializer(@NonNull CompositeCachedDictEntryProvider dictEntryProvider,
         @NonNull JsonDictMeta jsonDictMeta, @NonNull ConversionService conversionService) {
         super(Object.class);
         this.dictEntryProvider = dictEntryProvider;

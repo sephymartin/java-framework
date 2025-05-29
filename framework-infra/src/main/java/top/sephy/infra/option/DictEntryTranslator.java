@@ -30,11 +30,11 @@ import top.sephy.infra.option.annotation.TranslateDict;
 
 public class DictEntryTranslator {
 
-    private DictEntryProvider<Object, Object> optionProvider;
+    private CompositeCachedDictEntryProvider optionProvider;
 
     private ConcurrentHashMap<Class<?>, List<TranslationMeta>> cache = new ConcurrentHashMap<>();
 
-    public DictEntryTranslator(DictEntryProvider<Object, Object> optionProvider) {
+    public DictEntryTranslator(CompositeCachedDictEntryProvider optionProvider) {
         this.optionProvider = optionProvider;
     }
 
