@@ -134,6 +134,8 @@
         <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
         <allure-maven.version>2.12.0</allure-maven.version>
         <sonar-maven-plugin.version>3.11.0.3922</sonar-maven-plugin.version>
+        <!-- 仅排除重复代码检测 按文件名匹配（如 *DTO.java, *VO.java） -->
+        <sonar.cdp.exclusions>**/*DTO.java, **/*VO.java, **/*DO.java, **/*Entity.java</sonar.cdp.exclusions>
         <!-- https://docs.sonarsource.com/sonarqube/latest/analyzing-source-code/analysis-parameters/ -->
         <cleanthat.version>2.12</cleanthat.version>
         <mybatis-plus-spring-boot3-starter.version>3.5.7</mybatis-plus-spring-boot3-starter.version>
