@@ -38,7 +38,7 @@ public final class GlobalIdGenerator {
      * @return unique id to represent a trace or segment
      */
     public static String generate() {
-        return new StringJoiner(".").add(PROCESS_ID).add(String.valueOf(Thread.currentThread().getId()))
+        return new StringJoiner(".").add(PROCESS_ID).add(String.valueOf(Thread.currentThread().threadId()))
             .add(String.valueOf(THREAD_ID_SEQUENCE.get().nextSeq())).toString();
     }
 
