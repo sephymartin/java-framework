@@ -1,17 +1,14 @@
 /*
  * Copyright 2022-2025 sephy.top
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
  * https://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 package top.sephy.infra.mybatis.plus.intercepter;
 
@@ -37,26 +34,36 @@ import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
 import com.baomidou.mybatisplus.extension.parser.JsqlParserGlobal;
-import com.baomidou.mybatisplus.extension.plugins.inner.DataChangeRecorderInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
 
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.jsqlparser.expression.*;
+import net.sf.jsqlparser.expression.Expression;
+import net.sf.jsqlparser.expression.Function;
+import net.sf.jsqlparser.expression.JsonAggregateOnNullType;
+import net.sf.jsqlparser.expression.JsonFunction;
+import net.sf.jsqlparser.expression.JsonFunctionType;
+import net.sf.jsqlparser.expression.JsonKeyValuePair;
+import net.sf.jsqlparser.expression.LongValue;
+import net.sf.jsqlparser.expression.StringValue;
 import net.sf.jsqlparser.expression.operators.relational.ExpressionList;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.delete.Delete;
 import net.sf.jsqlparser.statement.insert.Insert;
-import net.sf.jsqlparser.statement.select.*;
+import net.sf.jsqlparser.statement.select.AllColumns;
+import net.sf.jsqlparser.statement.select.FromItem;
+import net.sf.jsqlparser.statement.select.PlainSelect;
+import net.sf.jsqlparser.statement.select.Select;
+import net.sf.jsqlparser.statement.select.SelectItem;
 import top.sephy.infra.exception.SystemException;
+import top.sephy.infra.mybatis.exception.DataUpdateLimitationException;
 import top.sephy.infra.mybatis.interceptor.CurrentUserExtractor;
 
 /**
- * save delete content before real delete operation, user can customize table
- * name, column name
+ * save delete content before real delete operation, user can customize table name, column name
  * 
  */
 @Slf4j
@@ -142,8 +149,8 @@ public class DeleteLogInterceptor implements InnerInterceptor {
                     processDelete((Delete)statement, ms, boundSql, connection);
                 }
             } catch (Exception e) {
-                if (e instanceof DataChangeRecorderInnerInterceptor.DataUpdateLimitationException) {
-                    throw (DataChangeRecorderInnerInterceptor.DataUpdateLimitationException)e;
+                if (e instanceof DataUpdateLimitationException) {
+                    throw (DataUpdateLimitationException)e;
                 }
                 log.error("Unexpected error for mappedStatement={}, sql={}", ms.getId(), mpBs.sql(), e);
                 return;
@@ -294,8 +301,8 @@ public class DeleteLogInterceptor implements InnerInterceptor {
             }
             return i;
         } catch (Exception e) {
-            if (e instanceof DataChangeRecorderInnerInterceptor.DataUpdateLimitationException) {
-                throw (DataChangeRecorderInnerInterceptor.DataUpdateLimitationException)e;
+            if (e instanceof DataUpdateLimitationException) {
+                throw (DataUpdateLimitationException)e;
             }
             log.error("try to get record tobe deleted for selectStmt={}", selectStmt, e);
             throw new SystemException(e);
@@ -333,12 +340,12 @@ public class DeleteLogInterceptor implements InnerInterceptor {
                 String msg =
                     String.format("batch update limit exceed for configured tableName=%s, limit=%d, " + "count=%d",
                         tableName, limit, count);
-                throw new DataChangeRecorderInnerInterceptor.DataUpdateLimitationException(msg);
+                throw new DataUpdateLimitationException(msg);
             }
         } else if (count > defaultBatchUpdateLimit) {
             String msg = String.format("batch update limit exceed for configured tableName=%s, limit=%d, " + "count=%d",
                 tableName, defaultBatchUpdateLimit, count);
-            throw new DataChangeRecorderInnerInterceptor.DataUpdateLimitationException(msg);
+            throw new DataUpdateLimitationException(msg);
         }
     }
 }

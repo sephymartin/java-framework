@@ -95,7 +95,7 @@
         <mybatis-spring-boot-starter.version>3.0.3</mybatis-spring-boot-starter.version>
         <mybatis.version>3.5.15</mybatis.version>
         <modelmapper.version>3.0.0</modelmapper.version>
-        <mybatis-plus.version>3.5.5</mybatis-plus.version>
+        <mybatis-plus.version>3.5.14</mybatis-plus.version>
         <mybatis-plus-boot-starter.version>${mybatis-plus.version}</mybatis-plus-boot-starter.version>
         <mybatis-table-modify-mysql-boot-starter.version>1.5.3</mybatis-table-modify-mysql-boot-starter.version>
         <mysql.version>8.0.26</mysql.version>
@@ -138,7 +138,7 @@
         <sonar.cdp.exclusions>**/*DTO.java, **/*VO.java, **/*DO.java, **/*Entity.java</sonar.cdp.exclusions>
         <!-- https://docs.sonarsource.com/sonarqube/latest/analyzing-source-code/analysis-parameters/ -->
         <cleanthat.version>2.12</cleanthat.version>
-        <mybatis-plus-spring-boot3-starter.version>3.5.7</mybatis-plus-spring-boot3-starter.version>
+        <mybatis-plus-spring-boot3-starter.version>3.5.14</mybatis-plus-spring-boot3-starter.version>
         <mybatis-spring-boot.version>3.0.4</mybatis-spring-boot.version>
         <smart-doc-maven-plugin.version>3.0.5</smart-doc-maven-plugin.version>
     </properties>
@@ -431,6 +431,12 @@
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-generator</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-jsqlparser</artifactId>
                 <version>${mybatis-plus.version}</version>
             </dependency>
 
