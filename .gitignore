@@ -144,3 +144,6 @@ target/
 allure-results/
 
 .sdkmanrc
+
+# maven
+.flattened-pom.xml

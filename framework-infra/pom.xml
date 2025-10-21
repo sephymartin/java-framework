@@ -6,7 +6,7 @@
     <parent>
         <groupId>top.sephy</groupId>
         <artifactId>framework-dependencies</artifactId>
-        <version>0.1.0-SNAPSHOT</version>
+        <version>${revision}</version>
         <!-- lookup parent from repository -->
         <relativePath>../framework-dependencies/pom.xml</relativePath>
     </parent>
