@@ -25,8 +25,10 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.MDC;
+import org.springframework.core.annotation.Order;
 
 import lombok.extern.slf4j.Slf4j;
+import top.sephy.infra.consts.AopOrderConstants;
 import top.sephy.infra.utils.SpELUtils;
 
 /**
@@ -34,11 +36,31 @@ import top.sephy.infra.utils.SpELUtils;
  * <p>
  * 负责拦截带有 {@link LogKeyword} 或 {@link LogKeywords} 注解的方法，
  * 通过 SpEL 表达式从方法参数中提取值并放入 SLF4J MDC 中
+ * <p>
+ * <b>AOP 执行顺序说明：</b>
+ * <ul>
+ *   <li>Order 值越小，优先级越高</li>
+ *   <li>默认 Order = Integer.MAX_VALUE（最低优先级）</li>
+ *   <li>建议的顺序：日志追踪(100) > 分布式锁(200) > 事务(300) > 业务逻辑</li>
+ * </ul>
+ * <p>
+ * 当前优先级：{@link AopOrderConstants#LOG_KEYWORD}（较高优先级，确保在其他切面之前设置 MDC）
+ * 
+ * @see org.springframework.core.annotation.Order
+ * @see AopOrderConstants
  */
 @Slf4j
 @Aspect
+@Order(AopOrderConstants.LOG_KEYWORD)
 public class LogKeywordAspect {
 
+    /**
+     * 匹配带有 @LogKeyword 或 @LogKeywords 注解的方法
+     * <p>
+     * 注意：这里使用完全限定类名（FQCN）是 AspectJ 的标准做法，
+     * 它是通过类型引用而非字符串路径，IDE 支持重构和跳转，
+     * 编译时会进行类型检查，因此是类型安全的。
+     */
     @Pointcut("@annotation(top.sephy.infra.logging.annotation.LogKeyword) || "
         + "@annotation(top.sephy.infra.logging.annotation.LogKeywords)")
     public void logKeywordPointcut() {}

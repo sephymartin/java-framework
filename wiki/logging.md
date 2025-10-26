@@ -31,6 +31,18 @@ public class LoggingConfig {
 }
 ```
 
+**AOP 执行顺序**：
+
+`LogKeywordAspect` 的 `@Order` 值为 **100**，这意味着它会在大多数其他切面之前执行。推荐的顺序：
+
+| Order | 切面类型 | 说明 |
+|-------|---------|------|
+| 100 | `@LogKeyword` | 设置 MDC 上下文 |
+| 200 | `@RedisLock` | 获取分布式锁 |
+| 300 | `@Transactional` | 数据库事务 |
+
+详细说明请参考：[AOP 执行顺序规范](./aop-order.md)
+
 #### 2. 配置日志格式
 
 在 `logback-spring.xml` 中配置 MDC 输出：

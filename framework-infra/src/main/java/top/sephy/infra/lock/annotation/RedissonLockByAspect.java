@@ -24,13 +24,16 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.springframework.core.annotation.Order;
 
 import lombok.extern.slf4j.Slf4j;
+import top.sephy.infra.consts.AopOrderConstants;
 import top.sephy.infra.exception.SystemException;
 import top.sephy.infra.utils.SpELUtils;
 
 @Slf4j
 @Aspect
+@Order(AopOrderConstants.DISTRIBUTED_LOCK)
 public class RedissonLockByAspect {
 
     private final RedissonClient redissonClient;
