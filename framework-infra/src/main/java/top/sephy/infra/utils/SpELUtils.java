@@ -65,4 +65,35 @@ public abstract class SpELUtils {
         }
         return contentTemplate.getValue(ctx, String.class);
     }
+
+    /**
+     * 解析 SpEL 表达式并返回 Object 类型结果
+     * 
+     * @param template SpEL 表达式模板
+     * @param joinPoint AOP 连接点
+     * @return 解析后的对象
+     */
+    public static Object parseToObject(String template, ProceedingJoinPoint joinPoint) {
+
+        final Object target = joinPoint.getTarget();
+
+        String className = target.getClass().getName();
+        final Signature signature = joinPoint.getSignature();
+        String[] paramNames = ((CodeSignature)signature).getParameterNames();
+        String methodName = signature.getName();
+        String contentKey = className + "#" + methodName + "#" + template;
+        final Expression contentTemplate = EXPRESSION_CACHE.computeIfAbsent(contentKey,
+            k -> EXPRESSION_PARSER.parseExpression(template, PARSER_CONTEXT));
+
+        // 将方法参数添加到上下文中
+        final Object[] paramValues = joinPoint.getArgs();
+
+        StandardEvaluationContext ctx = new StandardEvaluationContext();
+        for (int i = 0; i < paramNames.length; i++) {
+            String paramName = paramNames[i];
+            Object paramValue = paramValues[i];
+            ctx.setVariable(paramName, paramValue);
+        }
+        return contentTemplate.getValue(ctx);
+    }
 }
