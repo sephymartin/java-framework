@@ -15,6 +15,7 @@
  */
 package top.sephy.infra.utils;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -81,7 +82,7 @@ public abstract class SpELUtils {
         final Signature signature = joinPoint.getSignature();
         String[] paramNames = ((CodeSignature)signature).getParameterNames();
         String methodName = signature.getName();
-        String contentKey = className + "#" + methodName + "#" + template;
+        String contentKey = className + "#" + methodName + "#" + Arrays.toString(paramNames) + "#" + template;
         final Expression contentTemplate = EXPRESSION_CACHE.computeIfAbsent(contentKey,
             k -> EXPRESSION_PARSER.parseExpression(template, PARSER_CONTEXT));
 
