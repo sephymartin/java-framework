@@ -147,3 +147,5 @@ allure-results/
 
 # maven
 .flattened-pom.xml
+
+.vscode
