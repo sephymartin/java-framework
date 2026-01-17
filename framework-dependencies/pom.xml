@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.7</version>
+        <version>4.0.1</version>
         <!-- lookup parent from repository -->
         <relativePath/>
     </parent>
@@ -27,7 +27,7 @@
     </distributionManagement>
 
     <properties>
-        <revision>0.1.0-SNAPSHOT</revision>
+        <revision>4.0.0-SNAPSHOT</revision>
         <tika-core.version>1.22</tika-core.version>
         <rversion>0.1.0-SNAPSHOT</rversion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -103,7 +103,7 @@
         <mysql-connector-java.version>8.0.26</mysql-connector-java.version>
 
         <pagehelper.version>6.1.0</pagehelper.version>
-        <pagehelper-spring-boot-starter.version>2.1.0-springboot3-SNAPSHOT</pagehelper-spring-boot-starter.version>
+        <pagehelper-spring-boot-starter.version>2.1.0-springboot4-SNAPSHOT</pagehelper-spring-boot-starter.version>
         <playwright.version>1.51.0</playwright.version>
         <poi.version>4.1.2</poi.version>
 
@@ -139,8 +139,8 @@
         <sonar.cdp.exclusions>**/*DTO.java, **/*VO.java, **/*DO.java, **/*Entity.java</sonar.cdp.exclusions>
         <!-- https://docs.sonarsource.com/sonarqube/latest/analyzing-source-code/analysis-parameters/ -->
         <cleanthat.version>2.12</cleanthat.version>
-        <mybatis-plus-spring-boot3-starter.version>3.5.14</mybatis-plus-spring-boot3-starter.version>
-        <mybatis-spring-boot.version>3.0.4</mybatis-spring-boot.version>
+        <mybatis-plus-spring-boot4-starter.version>3.5.16</mybatis-plus-spring-boot4-starter.version>
+        <mybatis-spring-boot.version>4.0.1</mybatis-spring-boot.version>
         <smart-doc-maven-plugin.version>3.0.5</smart-doc-maven-plugin.version>
     </properties>
 
@@ -403,8 +403,8 @@
             <!-- mybatis plus starter -->
             <dependency>
                 <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
-                <version>${mybatis-plus-spring-boot3-starter.version}</version>
+                <artifactId>mybatis-plus-spring-boot4-starter</artifactId>
+                <version>${mybatis-plus-spring-boot4-starter.version}</version>
                 <exclusions>
                     <!--
                     <exclusion>
