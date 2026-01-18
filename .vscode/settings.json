@@ -1,3 +1,14 @@
 {
-  "java.compile.nullAnalysis.mode": "automatic"
+  "java.compile.nullAnalysis.mode": "automatic",
+  "java.jdt.ls.java.home": "/Users/sephy/.local/share/mise/installs/java/temurin-21.0.7+6.0.LTS",
+  "java.import.gradle.java.home": "/Users/sephy/.local/share/mise/installs/java/temurin-21.0.7+6.0.LTS",
+  "go.goroot": "/Users/sephy/.local/share/mise/installs/go/1.24.4",
+  "debug.javascript.defaultRuntimeExecutable": {
+    "pwa-node": "/Users/sephy/.local/share/mise/shims/node"
+  },
+  "go.alternateTools": {
+    "go": "/Users/sephy/.local/share/mise/shims/go",
+    "dlv": "/Users/sephy/.local/share/mise/shims/dlv",
+    "gopls": "/Users/sephy/.local/share/mise/shims/gopls"
+  }
 }
