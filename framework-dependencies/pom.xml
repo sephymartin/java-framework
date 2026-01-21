@@ -72,7 +72,6 @@
         <jsch.version>0.1.55</jsch.version>
         <jsoup.version>1.11.3</jsoup.version>
 
-
         <knife4j.version>4.5.0</knife4j.version>
         <!-- @formatter:off -->
         <knife4j-openapi3-jakarta-spring-boot-starter.version>${knife4j.version}</knife4j-openapi3-jakarta-spring-boot-starter.version>
@@ -104,7 +103,7 @@
 
         <pagehelper.version>6.1.0</pagehelper.version>
         <pagehelper-spring-boot-starter.version>2.1.0-springboot3-SNAPSHOT</pagehelper-spring-boot-starter.version>
-        <playwright.version>1.51.0</playwright.version>
+        <playwright.version>1.57.0</playwright.version>
         <poi.version>4.1.2</poi.version>
 
         <redisson.version>3.47.0</redisson.version>
@@ -115,12 +114,13 @@
         <shardingsphere.version>5.4.1</shardingsphere.version>
         <skywalking.version>8.8.1</skywalking.version>
         <snakeyaml-version>2.0.0</snakeyaml-version>
-        <spotless-maven-plugin.version>2.43.0</spotless-maven-plugin.version>
+        <spotless-maven-plugin.version>3.1.0</spotless-maven-plugin.version>
         <spring-boot-admin.version>3.4.1</spring-boot-admin.version>
         <springdoc-openapi.version>2.8.6</springdoc-openapi.version>
-        <!-- todo replace with ${maven.multiModuleProjectDirectory} -->
-        <style.folder>${session.executionRootDirectory}/style</style.folder>
+        <!-- Spotless 配置文件目录，使用构建输出目录避免依赖项目根目录结构 -->
+        <style.folder>${project.build.directory}/spotless-config</style.folder>
         <eclipse-code-formatter.version>4.26</eclipse-code-formatter.version>
+        <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
         <swagger-project-jakarta.version>2.2.8</swagger-project-jakarta.version>
 
         <transmittable-thread-local.version>2.14.5</transmittable-thread-local.version>
@@ -138,7 +138,7 @@
         <!-- 仅排除重复代码检测 按文件名匹配（如 *DTO.java, *VO.java） -->
         <sonar.cdp.exclusions>**/*DTO.java, **/*VO.java, **/*DO.java, **/*Entity.java</sonar.cdp.exclusions>
         <!-- https://docs.sonarsource.com/sonarqube/latest/analyzing-source-code/analysis-parameters/ -->
-        <cleanthat.version>2.12</cleanthat.version>
+        <cleanthat.version>2.24</cleanthat.version>
         <mybatis-plus-spring-boot3-starter.version>3.5.16</mybatis-plus-spring-boot3-starter.version>
         <mybatis-spring-boot.version>3.0.4</mybatis-spring-boot.version>
         <smart-doc-maven-plugin.version>3.0.5</smart-doc-maven-plugin.version>
@@ -794,6 +794,74 @@
                     </executions>
                 </plugin>
 
+                <!-- 下载 Spotless 配置文件，支持多 URL 回退 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>${maven-antrun-plugin.version}</version>
+                    <executions>
+                        <!-- 下载 Spotless 配置文件，支持多 URL 回退 -->
+                        <!-- 通过 mvn antrun:run@download-spotless-config 显式执行 -->
+                        <execution>
+                            <id>download-spotless-config</id>
+                            <goals>
+                                <goal>run</goal>
+                            </goals>
+                            <configuration>
+                                <target>
+                                    <mkdir dir="${style.folder}"/>
+
+                                    <!-- 下载 p3c-eclipse-codestyle.xml，支持多 URL 回退 -->
+                                    <!-- 尝试从 Gitee 下载 -->
+                                    <get dest="${style.folder}/p3c-eclipse-codestyle.xml" ignoreerrors="true"
+                                         skipexisting="true"
+                                         src="https://gitee.com/sephy/code-style/raw/main/java/p3c-eclipse-codestyle.xml"/>
+                                    <available file="${style.folder}/p3c-eclipse-codestyle.xml"
+                                               property="p3c.downloaded"/>
+
+                                    <!-- 如果 Gitee 失败，尝试从 GitHub 下载 -->
+                                    <get dest="${style.folder}/p3c-eclipse-codestyle.xml" ignoreerrors="true"
+                                         skipexisting="true"
+                                         src="https://raw.githubusercontent.com/sephymartin/code-style/refs/heads/main/java/p3c-eclipse-codestyle.xml"/>
+                                    <available file="${style.folder}/p3c-eclipse-codestyle.xml"
+                                               property="p3c.downloaded"/>
+
+                                    <!-- 如果 GitHub 也失败，尝试 GitHub 代理 -->
+                                    <get dest="${style.folder}/p3c-eclipse-codestyle.xml" ignoreerrors="true"
+                                         skipexisting="true"
+                                         src="https://ghproxy.com/https://raw.githubusercontent.com/sephymartin/code-style/refs/heads/main/java/p3c-eclipse-codestyle.xml"/>
+                                    <available file="${style.folder}/p3c-eclipse-codestyle.xml"
+                                               property="p3c.downloaded"/>
+
+                                    <!-- 下载 eclipse.importorder，支持多 URL 回退 -->
+                                    <!-- 尝试从 Gitee 下载 -->
+                                    <get dest="${style.folder}/eclipse.importorder" ignoreerrors="true"
+                                         skipexisting="true"
+                                         src="https://gitee.com/sephy/code-style/raw/main/java/eclipse.importorder"/>
+                                    <available file="${style.folder}/eclipse.importorder"
+                                               property="importorder.downloaded"/>
+
+                                    <!-- 如果 Gitee 失败，尝试从 GitHub 下载 -->
+                                    <get dest="${style.folder}/eclipse.importorder" ignoreerrors="true"
+                                         skipexisting="true"
+                                         src="https://raw.githubusercontent.com/sephymartin/code-style/refs/heads/main/java/eclipse.importorder"/>
+                                    <available file="${style.folder}/eclipse.importorder"
+                                               property="importorder.downloaded"/>
+
+                                    <!-- 如果所有源都失败，使用本地文件（如果存在且目标文件不存在） -->
+                                    <available file="${style.folder}/eclipse.importorder"
+                                               property="importorder.downloaded"/>
+                                    <available file="${project.basedir}/../framework-infra/style/eclipse.importorder"
+                                               property="importorder.local.exists"/>
+                                    <copy failonerror="false"
+                                          file="${project.basedir}/../framework-infra/style/eclipse.importorder"
+                                          overwrite="false" tofile="${style.folder}/eclipse.importorder"/>
+                                </target>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+
                 <!-- https://shardingsphere.apache.org/blog/cn/material/spotless/ -->
                 <!-- https://github.com/diffplug/spotless/tree/main/plugin-maven -->
                 <plugin>
@@ -801,6 +869,9 @@
                     <artifactId>spotless-maven-plugin</artifactId>
                     <version>${spotless-maven-plugin.version}</version>
                     <configuration>
+                        <upToDateChecking>
+                            <enabled>true</enabled>
+                        </upToDateChecking>
                         <formats>
                             <!-- you can define as many formats as you want, each is independent -->
                             <format>
@@ -887,19 +958,16 @@
                             <sortPom>
                                 <expandEmptyElements>false</expandEmptyElements>
                                 <nrOfIndentSpace>4</nrOfIndentSpace>
-                                <indentSchemaLocation>true</indentSchemaLocation>
+                                <indentAttribute>schemaLocation</indentAttribute>
                             </sortPom>
                             <!-- has its own section below -->
                         </pom>
                     </configuration>
                     <executions>
-                        <!-- 在构建时自动格式化 -->
-                        <execution>
-                            <id>apply</id>
-                            <goals>
-                                <goal>apply</goal>
-                            </goals>
-                        </execution>
+                        <!-- Spotless 格式化执行 -->
+                        <!-- 通过 mvn spotless:apply 显式执行 -->
+                        <!-- 推荐使用：mvn antrun:run@download-spotless-config spotless:apply -->
+                        <!-- 这会先下载配置文件，然后执行格式化 -->
 
                         <!--
                         <execution>
@@ -968,6 +1036,11 @@
                         <phase>compile</phase>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
             </plugin>
 
             <plugin>

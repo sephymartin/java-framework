@@ -15,11 +15,16 @@
  */
 package top.sephy.infra.exception;
 
+import java.io.Serial;
+
 /**
  * @author sephy
  * @date 2020-06-27 18:14
  */
 public class SystemException extends RuntimeException {
+
+    @Serial
+    private static final long serialVersionUID = -4634153819023050939L;
 
     public SystemException() {}
 
@@ -34,6 +39,4 @@ public class SystemException extends RuntimeException {
     public SystemException(String message, Throwable cause) {
         super(message, cause);
     }
-
-    private static final long serialVersionUID = -4634153819023050939L;
 }

@@ -15,12 +15,15 @@
  */
 package top.sephy.infra.exception;
 
+import java.io.Serial;
+
 /**
  * @author sephy
  * @date 2020-06-14 00:52
  */
 public class ServiceException extends RuntimeException {
 
+    @Serial
     private static final long serialVersionUID = 3007273321183731025L;
 
     public ServiceException() {}

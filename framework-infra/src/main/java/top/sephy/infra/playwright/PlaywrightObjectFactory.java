@@ -15,11 +15,11 @@
  */
 package top.sephy.infra.playwright;
 
+import com.microsoft.playwright.BrowserType;
 import org.apache.commons.pool2.BasePooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
 
-import com.microsoft.playwright.APIResponse;
 import com.microsoft.playwright.Playwright;
 
 /**
@@ -52,9 +52,15 @@ public class PlaywrightObjectFactory extends BasePooledObjectFactory<Playwright>
 
     @Override
     public boolean validateObject(final PooledObject<Playwright> p) {
-        // p.getObject().request().newContext().get(LOCAL_VALIDATE_HTML.toURI().toString());
-        APIResponse apiResponse = p.getObject().request().newContext().get("https://www.baidu.com");
-        return apiResponse.ok();
+        try {
+            // 轻量级验证：检查 Playwright 实例是否仍然有效
+            // 尝试获取 BrowserType 来验证，而不是发送网络请求
+            Playwright playwright = p.getObject();
+            BrowserType browserType = playwright.chromium();
+            return browserType != null;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     private static class DefaultPooledPlaywright extends DefaultPooledObject<Playwright> {

@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      https://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,20 +22,20 @@ package top.sephy.infra.consts;
  * <p>
  * <b>执行顺序规则：</b>
  * <ul>
- *   <li>Order 值小的切面最先进入，最后退出（洋葱模型）</li>
- *   <li>默认 Order = Integer.MAX_VALUE（最低优先级）</li>
- *   <li>相同 Order 值时，执行顺序不确定</li>
+ * <li>Order 值小的切面最先进入，最后退出（洋葱模型）</li>
+ * <li>默认 Order = Integer.MAX_VALUE（最低优先级）</li>
+ * <li>相同 Order 值时，执行顺序不确定</li>
  * </ul>
  * <p>
  * <b>推荐的顺序分配：</b>
  * <ul>
- *   <li>1-50: 基础设施层（请求追踪、性能监控）</li>
- *   <li>100: 日志追踪层（MDC 设置）</li>
- *   <li>200: 分布式锁层</li>
- *   <li>300: 事务管理层</li>
- *   <li>400: 缓存层</li>
- *   <li>500: 权限校验层</li>
- *   <li>1000+: 业务切面层</li>
+ * <li>1-50: 基础设施层（请求追踪、性能监控）</li>
+ * <li>100: 日志追踪层（MDC 设置）</li>
+ * <li>200: 分布式锁层</li>
+ * <li>300: 事务管理层</li>
+ * <li>400: 缓存层</li>
+ * <li>500: 权限校验层</li>
+ * <li>1000+: 业务切面层</li>
  * </ul>
  * 
  * @see org.springframework.core.annotation.Order
@@ -124,4 +124,3 @@ public final class AopOrderConstants {
      */
     public static final int BUSINESS_MONITOR = 1200;
 }
-
