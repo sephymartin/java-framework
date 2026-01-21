@@ -4,12 +4,12 @@
 
 // https://www.cnblogs.com/jiaoshou/p/12250278.html
 module.exports = {
-  'framework-dependencies/**/*.{java,tk}|**/pom.xml': (filenames) =>
-    `cd framework-dependencies && ./mvnw antrun:run@download-spotless-config spotless:apply -DspotlessFiles=${filenames.join(
+  'framework-dependencies/**/*.{java,kt}|**/pom.xml': (filenames) =>
+    `cd framework-dependencies && ./mvnw spotless:apply -DspotlessFiles=${filenames.join(
       ','
     )}`,
-  'framework-infra/**/*.{java,tk}|**/pom.xml': (filenames) =>
-    `cd framework-infra && ./mvnw antrun:run@download-spotless-config spotless:apply -DspotlessFiles=${filenames.join(
+  'framework-infra/**/*.{java,kt}|**/pom.xml': (filenames) =>
+    `cd framework-infra && ./mvnw spotless:apply -DspotlessFiles=${filenames.join(
       ','
     )}`,
   '**/!(pnpm-lock).{json,js,yml,yaml}': (filenames) =>
