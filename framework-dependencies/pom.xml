@@ -809,53 +809,64 @@
                             </goals>
                             <configuration>
                                 <target>
-                                    <mkdir dir="${style.folder}"/>
+                                    <!-- 只在父模块（packaging=pom）中执行下载任务 -->
+                                    <condition property="is.parent.module">
+                                        <equals arg1="${project.packaging}" arg2="pom"/>
+                                    </condition>
+                                    
+                                    <!-- 使用 Ant Contrib 的 if 任务进行条件执行 -->
+                                    <if>
+                                        <isset property="is.parent.module"/>
+                                        <then>
+                                            <mkdir dir="${style.folder}"/>
 
-                                    <!-- 下载 p3c-eclipse-codestyle.xml，支持多 URL 回退 -->
-                                    <!-- 尝试从 Gitee 下载 -->
-                                    <get dest="${style.folder}/p3c-eclipse-codestyle.xml" ignoreerrors="true"
-                                         skipexisting="true"
-                                         src="https://gitee.com/sephy/code-style/raw/main/java/p3c-eclipse-codestyle.xml"/>
-                                    <available file="${style.folder}/p3c-eclipse-codestyle.xml"
-                                               property="p3c.downloaded"/>
+                                            <!-- 下载 p3c-eclipse-codestyle.xml，支持多 URL 回退 -->
+                                            <!-- 尝试从 Gitee 下载 -->
+                                            <get dest="${style.folder}/p3c-eclipse-codestyle.xml" ignoreerrors="true"
+                                                 skipexisting="true"
+                                                 src="https://gitee.com/sephy/code-style/raw/main/java/p3c-eclipse-codestyle.xml"/>
+                                            <available file="${style.folder}/p3c-eclipse-codestyle.xml"
+                                                       property="p3c.downloaded"/>
 
-                                    <!-- 如果 Gitee 失败，尝试从 GitHub 下载 -->
-                                    <get dest="${style.folder}/p3c-eclipse-codestyle.xml" ignoreerrors="true"
-                                         skipexisting="true"
-                                         src="https://raw.githubusercontent.com/sephymartin/code-style/refs/heads/main/java/p3c-eclipse-codestyle.xml"/>
-                                    <available file="${style.folder}/p3c-eclipse-codestyle.xml"
-                                               property="p3c.downloaded"/>
+                                            <!-- 如果 Gitee 失败，尝试从 GitHub 下载 -->
+                                            <get dest="${style.folder}/p3c-eclipse-codestyle.xml" ignoreerrors="true"
+                                                 skipexisting="true"
+                                                 src="https://raw.githubusercontent.com/sephymartin/code-style/refs/heads/main/java/p3c-eclipse-codestyle.xml"/>
+                                            <available file="${style.folder}/p3c-eclipse-codestyle.xml"
+                                                       property="p3c.downloaded"/>
 
-                                    <!-- 如果 GitHub 也失败，尝试 GitHub 代理 -->
-                                    <get dest="${style.folder}/p3c-eclipse-codestyle.xml" ignoreerrors="true"
-                                         skipexisting="true"
-                                         src="https://ghproxy.com/https://raw.githubusercontent.com/sephymartin/code-style/refs/heads/main/java/p3c-eclipse-codestyle.xml"/>
-                                    <available file="${style.folder}/p3c-eclipse-codestyle.xml"
-                                               property="p3c.downloaded"/>
+                                            <!-- 如果 GitHub 也失败，尝试 GitHub 代理 -->
+                                            <get dest="${style.folder}/p3c-eclipse-codestyle.xml" ignoreerrors="true"
+                                                 skipexisting="true"
+                                                 src="https://ghproxy.com/https://raw.githubusercontent.com/sephymartin/code-style/refs/heads/main/java/p3c-eclipse-codestyle.xml"/>
+                                            <available file="${style.folder}/p3c-eclipse-codestyle.xml"
+                                                       property="p3c.downloaded"/>
 
-                                    <!-- 下载 eclipse.importorder，支持多 URL 回退 -->
-                                    <!-- 尝试从 Gitee 下载 -->
-                                    <get dest="${style.folder}/eclipse.importorder" ignoreerrors="true"
-                                         skipexisting="true"
-                                         src="https://gitee.com/sephy/code-style/raw/main/java/eclipse.importorder"/>
-                                    <available file="${style.folder}/eclipse.importorder"
-                                               property="importorder.downloaded"/>
+                                            <!-- 下载 eclipse.importorder，支持多 URL 回退 -->
+                                            <!-- 尝试从 Gitee 下载 -->
+                                            <get dest="${style.folder}/eclipse.importorder" ignoreerrors="true"
+                                                 skipexisting="true"
+                                                 src="https://gitee.com/sephy/code-style/raw/main/java/eclipse.importorder"/>
+                                            <available file="${style.folder}/eclipse.importorder"
+                                                       property="importorder.downloaded"/>
 
-                                    <!-- 如果 Gitee 失败，尝试从 GitHub 下载 -->
-                                    <get dest="${style.folder}/eclipse.importorder" ignoreerrors="true"
-                                         skipexisting="true"
-                                         src="https://raw.githubusercontent.com/sephymartin/code-style/refs/heads/main/java/eclipse.importorder"/>
-                                    <available file="${style.folder}/eclipse.importorder"
-                                               property="importorder.downloaded"/>
+                                            <!-- 如果 Gitee 失败，尝试从 GitHub 下载 -->
+                                            <get dest="${style.folder}/eclipse.importorder" ignoreerrors="true"
+                                                 skipexisting="true"
+                                                 src="https://raw.githubusercontent.com/sephymartin/code-style/refs/heads/main/java/eclipse.importorder"/>
+                                            <available file="${style.folder}/eclipse.importorder"
+                                                       property="importorder.downloaded"/>
 
-                                    <!-- 如果所有源都失败，使用本地文件（如果存在且目标文件不存在） -->
-                                    <available file="${style.folder}/eclipse.importorder"
-                                               property="importorder.downloaded"/>
-                                    <available file="${project.basedir}/../framework-infra/style/eclipse.importorder"
-                                               property="importorder.local.exists"/>
-                                    <copy failonerror="false"
-                                          file="${project.basedir}/../framework-infra/style/eclipse.importorder"
-                                          overwrite="false" tofile="${style.folder}/eclipse.importorder"/>
+                                            <!-- 如果所有源都失败，使用本地文件（如果存在且目标文件不存在） -->
+                                            <available file="${style.folder}/eclipse.importorder"
+                                                       property="importorder.downloaded"/>
+                                            <available file="${project.basedir}/../framework-infra/style/eclipse.importorder"
+                                                       property="importorder.local.exists"/>
+                                            <copy failonerror="false"
+                                                  file="${project.basedir}/../framework-infra/style/eclipse.importorder"
+                                                  overwrite="false" tofile="${style.folder}/eclipse.importorder"/>
+                                        </then>
+                                    </if>
                                 </target>
                             </configuration>
                         </execution>
