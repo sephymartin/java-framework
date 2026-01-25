@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2025 sephy.top
+ * Copyright 2022-2026 sephy.top
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,11 @@
  */
 package top.sephy.infra.playwright;
 
-import com.microsoft.playwright.BrowserType;
 import org.apache.commons.pool2.BasePooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
 
+import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.Playwright;
 
 /**

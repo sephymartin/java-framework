@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2025 sephy.top
+ * Copyright 2022-2026 sephy.top
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,7 @@
 package top.sephy.infra.config;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -26,9 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
-import org.awaitility.Awaitility;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -39,13 +35,13 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.context.refresh.ContextRefresher;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MapPropertySource;
+import org.springframework.test.annotation.DirtiesContext;
 
 /**
  * ConfigFileWatcher 集成测试
@@ -55,14 +51,9 @@ import org.springframework.core.env.MapPropertySource;
  * 2. @RefreshScope 机制是否正常工作
  * 3. 配置文件变化后触发 ContextRefresher.refresh()
  */
-@SpringBootTest(
-    classes = ConfigFileWatcherIntegrationTest.TestConfig.class,
-    properties = {
-        "test.message=初始值",
-        "spring.config.file-watcher.enabled=true",
-        "spring.config.file-watcher.delay-millis=100"
-    }
-)
+@SpringBootTest(classes = ConfigFileWatcherIntegrationTest.TestConfig.class,
+    properties = {"test.message=初始值", "spring.config.file-watcher.enabled=true",
+        "spring.config.file-watcher.delay-millis=100"})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class ConfigFileWatcherIntegrationTest {
 
@@ -217,8 +208,7 @@ class ConfigFileWatcherIntegrationTest {
         disabledProperties.setEnabled(false);
 
         // When: 创建一个新的 ConfigFileWatcher
-        ConfigFileWatcher disabledWatcher = new ConfigFileWatcher(
-            contextRefresher, environment, disabledProperties);
+        ConfigFileWatcher disabledWatcher = new ConfigFileWatcher(contextRefresher, environment, disabledProperties);
 
         // Then: isAutoStartup 应该返回 false
         assertThat(disabledWatcher.isAutoStartup()).isFalse();
@@ -251,10 +241,8 @@ class ConfigFileWatcherIntegrationTest {
 
         @Bean
         @Primary
-        public ConfigFileWatcher configFileWatcher(
-                ContextRefresher contextRefresher,
-                ConfigurableEnvironment environment,
-                ConfigFileWatcherProperties properties) {
+        public ConfigFileWatcher configFileWatcher(ContextRefresher contextRefresher,
+            ConfigurableEnvironment environment, ConfigFileWatcherProperties properties) {
             return new ConfigFileWatcher(contextRefresher, environment, properties);
         }
     }

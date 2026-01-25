@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2025 sephy.top
+ * Copyright 2022-2026 sephy.top
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -160,8 +160,8 @@ public class ConfigFileWatcher implements SmartLifecycle {
         // 尝试查找带 profile 的配置文件
         if (!activeProfile.isEmpty()) {
             try {
-                java.net.URL resource = getClass().getClassLoader()
-                    .getResource(configName + "-" + activeProfile + ".yml");
+                java.net.URL resource =
+                    getClass().getClassLoader().getResource(configName + "-" + activeProfile + ".yml");
                 if (resource != null && "file".equals(resource.getProtocol())) {
                     Path path = Paths.get(resource.toURI());
                     if (java.nio.file.Files.exists(path)) {
@@ -174,12 +174,8 @@ public class ConfigFileWatcher implements SmartLifecycle {
         }
 
         // 尝试从当前工作目录查找
-        String[] possiblePaths = {
-            configName + ".yml",
-            configName + ".yaml",
-            "src/main/resources/" + configName + ".yml",
-            "src/main/resources/" + configName + ".yaml",
-        };
+        String[] possiblePaths = {configName + ".yml", configName + ".yaml",
+            "src/main/resources/" + configName + ".yml", "src/main/resources/" + configName + ".yaml",};
 
         for (String pathStr : possiblePaths) {
             Path path = Paths.get(pathStr);
@@ -212,7 +208,7 @@ public class ConfigFileWatcher implements SmartLifecycle {
                     }
 
                     @SuppressWarnings("unchecked")
-                    WatchEvent<Path> ev = (WatchEvent<Path>) event;
+                    WatchEvent<Path> ev = (WatchEvent<Path>)event;
                     Path fileName = ev.context();
 
                     // 检查是否是配置文件

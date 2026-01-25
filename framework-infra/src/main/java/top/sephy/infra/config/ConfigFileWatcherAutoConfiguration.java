@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2025 sephy.top
+ * Copyright 2022-2026 sephy.top
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,21 +29,15 @@ import org.springframework.core.env.Environment;
  * @author sephy
  */
 @Configuration
-@ConditionalOnProperty(
-    prefix = "spring.config.file-watcher",
-    name = "enabled",
-    havingValue = "true",
-    matchIfMissing = false
-)
+@ConditionalOnProperty(prefix = "spring.config.file-watcher", name = "enabled", havingValue = "true",
+    matchIfMissing = false)
 @EnableConfigurationProperties(ConfigFileWatcherProperties.class)
 public class ConfigFileWatcherAutoConfiguration {
 
     @Bean
     @ConditionalOnBean(ContextRefresher.class)
-    public ConfigFileWatcher configFileWatcher(
-            ContextRefresher contextRefresher,
-            Environment environment,
-            ConfigFileWatcherProperties properties) {
+    public ConfigFileWatcher configFileWatcher(ContextRefresher contextRefresher, Environment environment,
+        ConfigFileWatcherProperties properties) {
         return new ConfigFileWatcher(contextRefresher, environment, properties);
     }
 }
