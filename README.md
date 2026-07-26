@@ -20,13 +20,10 @@ devops-toolkit/
 │       ├── feishu_notify.py      # 飞书通知核心模块
 │       ├── notify_start.py        # 构建开始通知
 │       └── notify_complete.py    # 构建完成通知
-└── code-style/          # 代码格式化规范
-    ├── java/            # Java 代码规范
-    │   ├── p3c-eclipse-codestyle.xml    # 阿里巴巴 P3C Eclipse 代码风格
-    │   └── eclipse.importorder          # Eclipse 导入顺序配置
-    ├── python/          # Python 代码规范（计划中）
-    ├── javascript/      # JavaScript/TypeScript 代码规范（计划中）
-    └── golang/          # Go 代码规范（计划中）
+└── java-code-style/     # Java 代码格式化规范，可发布为 Maven artifact
+    ├── pom.xml                         # top.sephy:java-code-style 发布配置
+    ├── p3c-eclipse-codestyle.xml       # 阿里巴巴 P3C Eclipse 代码风格
+    └── eclipse.importorder             # Eclipse 导入顺序配置
 ```
 
 ## 快速开始
@@ -49,9 +46,9 @@ git subtree add --prefix=scripts/devops-toolkit \
 git subtree add --prefix=scripts/ci \
   <repository-url> main:scripts/ci --squash
 
-# 只添加代码规范配置
-git subtree add --prefix=code-style \
-  <repository-url> main:code-style --squash
+# 只添加 Java 代码规范配置
+git subtree add --prefix=java-code-style \
+  <repository-url> main:java-code-style --squash
 ```
 
 #### 2. 使用脚本
@@ -76,8 +73,8 @@ steps:
 
 ```bash
 # 复制 Java 代码规范配置（Eclipse/IntelliJ IDEA）
-cp scripts/devops-toolkit/code-style/java/p3c-eclipse-codestyle.xml .idea/codeStyles/
-cp scripts/devops-toolkit/code-style/java/eclipse.importorder .idea/
+cp scripts/devops-toolkit/java-code-style/p3c-eclipse-codestyle.xml .idea/codeStyles/
+cp scripts/devops-toolkit/java-code-style/eclipse.importorder .idea/
 ```
 
 #### 4. 更新到最新版本
@@ -128,7 +125,7 @@ ln -s /path/to/devops-toolkit/scripts/ci ./scripts/ci-shared
 
 ## 代码格式化规范
 
-代码格式化规范配置文件存放在 `code-style/` 目录下，按语言分类组织。
+Java 代码格式化规范配置文件存放在 `java-code-style/` 目录下，并可发布为 `top.sephy:java-code-style` Maven artifact 供 Spotless 复用。
 
 ### Java
 
@@ -142,13 +139,18 @@ ln -s /path/to/devops-toolkit/scripts/ci ./scripts/ci-shared
    - Eclipse: 导入 `p3c-eclipse-codestyle.xml` 作为代码格式化配置
    - IntelliJ IDEA: 可以导入 Eclipse 代码风格配置
 
-2. **复制配置文件到项目**：
+2. **通过 Maven artifact 供 Spotless 复用（推荐）**：
+   - 发布 `top.sephy:java-code-style`
+   - 在父 POM 的 `spotless-maven-plugin` 中通过 plugin dependency 引入
+   - Spotless 配置中直接使用 `p3c-eclipse-codestyle.xml` 和 `eclipse.importorder` 资源名
+
+3. **复制配置文件到项目**：
    ```bash
-   cp code-style/java/p3c-eclipse-codestyle.xml .idea/codeStyles/
-   cp code-style/java/eclipse.importorder .idea/
+   cp java-code-style/p3c-eclipse-codestyle.xml .idea/codeStyles/
+   cp java-code-style/eclipse.importorder .idea/
    ```
 
-3. **使用格式化标签保护特殊代码**：
+4. **使用格式化标签保护特殊代码**：
    
    如果某些代码需要保持特殊格式（如 SQL 语句、JSON 字符串等），可以使用格式化标签来保护：
    

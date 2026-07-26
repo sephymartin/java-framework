@@ -120,12 +120,10 @@
         <skywalking.version>8.8.1</skywalking.version>
         <snakeyaml-version>2.0.0</snakeyaml-version>
         <spotless-maven-plugin.version>2.44.5</spotless-maven-plugin.version>
+        <java-code-style.version>${revision}</java-code-style.version>
         <spring-boot-admin.version>3.4.1</spring-boot-admin.version>
         <spring-cloud.version>2025.0.1</spring-cloud.version>
         <springdoc-openapi.version>2.8.15</springdoc-openapi.version>
-        <!-- Spotless 配置文件目录，使用项目本地 style 目录 -->
-        <!-- 使用 maven.multiModuleProjectDirectory 指向多模块项目根目录，如果未定义则回退到 project.basedir -->
-        <style.folder>${maven.multiModuleProjectDirectory}/style</style.folder>
         <eclipse-code-formatter.version>4.35</eclipse-code-formatter.version>
         <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
         <swagger-project-jakarta.version>2.2.41</swagger-project-jakarta.version>
@@ -831,7 +829,6 @@
                 </plugin>
 
                 <!-- maven-antrun-plugin 保留插件定义，但不再用于下载 Spotless 配置 -->
-                <!-- 现在直接使用项目本地 style 目录中的配置文件 -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-antrun-plugin</artifactId>
@@ -844,6 +841,13 @@
                     <groupId>com.diffplug.spotless</groupId>
                     <artifactId>spotless-maven-plugin</artifactId>
                     <version>${spotless-maven-plugin.version}</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>top.sephy</groupId>
+                            <artifactId>java-code-style</artifactId>
+                            <version>${java-code-style.version}</version>
+                        </dependency>
+                    </dependencies>
                     <configuration>
                         <upToDateChecking>
                             <enabled>true</enabled>
@@ -864,12 +868,10 @@
                         <java>
                             <eclipse>
                                 <version>${eclipse-code-formatter.version}</version>
-                                <!-- optional version of Eclipse Formatter -->
-                                <file>${style.folder}/p3c-eclipse-codestyle.xml</file>
-                                <!-- optional -->
+                                <file>p3c-eclipse-codestyle.xml</file>
                             </eclipse>
                             <importOrder>
-                                <file>${style.folder}/eclipse.importorder</file>
+                                <file>eclipse.importorder</file>
                             </importOrder>
                             <removeUnusedImports>
                                 <engine>cleanthat-javaparser-unnecessaryimport</engine>
@@ -942,7 +944,7 @@
                     <executions>
                         <!-- Spotless 格式化执行 -->
                         <!-- 通过 mvn spotless:apply 显式执行 -->
-                        <!-- 现在直接使用项目本地 style 目录中的配置文件，无需下载 -->
+                        <!-- Spotless 配置文件由 top.sephy:java-code-style 提供 -->
 
                         <!--
                         <execution>
