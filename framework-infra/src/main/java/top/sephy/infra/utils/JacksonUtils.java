@@ -37,9 +37,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.extern.slf4j.Slf4j;
-import top.sephy.infra.jackson3.deser.HashIdDeserializer3;
-import top.sephy.infra.jackson3.ser.CustomLocalDateTimeSerializer;
-import top.sephy.infra.jackson3.ser.HashIdSerializer3;
 import tools.jackson.core.JacksonException;
 import tools.jackson.core.Version;
 import tools.jackson.core.type.TypeReference;
@@ -55,6 +52,9 @@ import tools.jackson.databind.ext.javatime.deser.LocalDateTimeDeserializer;
 import tools.jackson.databind.json.JsonMapper;
 import tools.jackson.databind.module.SimpleModule;
 import tools.jackson.databind.ser.std.StdSerializer;
+import top.sephy.infra.jackson3.deser.HashIdDeserializer3;
+import top.sephy.infra.jackson3.ser.CustomLocalDateTimeSerializer;
+import top.sephy.infra.jackson3.ser.HashIdSerializer3;
 
 @Slf4j
 public abstract class JacksonUtils {
@@ -301,7 +301,8 @@ public abstract class JacksonUtils {
         }
 
         @Override
-        public void serialize(BigDecimal value, tools.jackson.core.JsonGenerator gen, SerializationContext serializers) {
+        public void serialize(BigDecimal value, tools.jackson.core.JsonGenerator gen,
+            SerializationContext serializers) {
             if (value == null) {
                 gen.writeNull();
                 return;
@@ -318,7 +319,8 @@ public abstract class JacksonUtils {
         }
 
         @Override
-        public ValueSerializer<?> createContextual(SerializationContext prov, tools.jackson.databind.BeanProperty property) {
+        public ValueSerializer<?> createContextual(SerializationContext prov,
+            tools.jackson.databind.BeanProperty property) {
             if (property == null) {
                 return this;
             }

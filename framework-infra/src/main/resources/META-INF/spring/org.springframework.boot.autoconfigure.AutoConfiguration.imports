@@ -1,1 +1,2 @@
 top.sephy.infra.modelmapper.ModelMapperAutoConfiguration
+top.sephy.infra.jackson3.EncryptedFieldAutoConfiguration
