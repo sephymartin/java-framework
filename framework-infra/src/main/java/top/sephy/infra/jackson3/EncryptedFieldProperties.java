@@ -27,6 +27,11 @@ import lombok.Data;
 public class EncryptedFieldProperties {
 
     /**
+     * Whether the encrypted-field module is registered with Spring's Jackson mapper.
+     */
+    private boolean enabled = true;
+
+    /**
      * 未通过注解指定时使用的默认 AES 密钥。
      */
     private String aesKey;

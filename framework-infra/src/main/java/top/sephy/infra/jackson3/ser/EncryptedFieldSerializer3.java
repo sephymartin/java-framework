@@ -20,11 +20,15 @@ import tools.jackson.core.JsonGenerator;
 import tools.jackson.databind.SerializationContext;
 import tools.jackson.databind.ser.std.StdSerializer;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 /**
  * Jackson 3 的加密字段序列化器。
  */
-public class EncryptedFieldSerializer3 extends StdSerializer<String> {
+public class EncryptedFieldSerializer3 extends StdSerializer<String> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private final String aesKey;

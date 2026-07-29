@@ -15,11 +15,17 @@
  */
 package top.sephy.infra.utils;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.math.BigDecimal;
+
 import org.junit.jupiter.api.Test;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import top.sephy.infra.exception.JsonException;
 import top.sephy.infra.jackson.annotation.JsonHashId;
 
 public class JacksonUtilTest {
@@ -28,9 +34,21 @@ public class JacksonUtilTest {
     public void testHashId() {
         HashIdObject hashIdObject = new HashIdObject(1L);
         String json = JacksonUtils.toJson(hashIdObject);
-        System.out.println(json);
+        assertEquals("jR", JacksonUtils.jsonToTree(json).get("id").asString());
         hashIdObject = JacksonUtils.jsonToObject(json, HashIdObject.class);
-        System.out.println(hashIdObject.id);
+        assertEquals(1L, hashIdObject.id);
+    }
+
+    @Test
+    public void testBigDecimalSerialization() {
+        String json = JacksonUtils.toJson(new BigDecimalObject(new BigDecimal("1")));
+
+        assertEquals("1.00", JacksonUtils.jsonToTree(json).get("amount").asString());
+    }
+
+    @Test
+    public void testInvalidJsonThrowsStandaloneJsonException() {
+        assertThrows(JsonException.class, () -> JacksonUtils.jsonToObject("{", HashIdObject.class));
     }
 
     @Data
@@ -40,5 +58,13 @@ public class JacksonUtilTest {
 
         @JsonHashId
         private Long id;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class BigDecimalObject {
+
+        private BigDecimal amount;
     }
 }

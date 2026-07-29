@@ -15,6 +15,8 @@
  */
 package top.sephy.infra.jackson3.ser;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Collection;
 
 import org.springframework.core.convert.ConversionService;
@@ -32,8 +34,9 @@ import top.sephy.infra.option.DictEntry;
 /**
  * Jackson 3 版本的 JsonDictSerializer
  */
-public class JsonDictSerializer extends StdSerializer<Object> {
+public class JsonDictSerializer extends StdSerializer<Object> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 2328857487201823680L;
 
     private final CompositeCachedDictEntryProvider dictEntryProvider;

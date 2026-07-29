@@ -15,6 +15,7 @@
  */
 package top.sephy.infra.jackson3.ser;
 
+import java.io.Serial;
 import java.util.List;
 
 import org.springframework.util.StringUtils;
@@ -32,6 +33,7 @@ import top.sephy.infra.jackson.annotation.EncryptedField;
  */
 public class EncryptedFieldSerializerModifier3 extends ValueSerializerModifier {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private final String defaultAesKey;

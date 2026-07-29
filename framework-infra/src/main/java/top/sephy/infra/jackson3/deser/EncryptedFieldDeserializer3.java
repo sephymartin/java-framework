@@ -32,8 +32,6 @@ import top.sephy.infra.jackson3.ser.EncryptedFieldCrypto;
  */
 public class EncryptedFieldDeserializer3 extends StdDeserializer<String> {
 
-    private static final long serialVersionUID = 1L;
-
     private final String annotationAesKey;
 
     private final String defaultAesKey;
@@ -54,18 +52,18 @@ public class EncryptedFieldDeserializer3 extends StdDeserializer<String> {
         if (node == null || node.isNull()) {
             return null;
         }
-        if (node.isTextual()) {
+        if (node.isString()) {
             // 兼容旧解密器已还原的明文，以及未来的纯密文字符串格式。
-            return node.asText();
+            return node.asString();
         }
         if (!node.isObject() || !node.path("encrypted").asBoolean(false)) {
             return (String)context.handleUnexpectedToken(String.class, parser);
         }
         JsonNode valueNode = node.get("value");
-        if (valueNode == null || !valueNode.isTextual() || !StringUtils.hasText(valueNode.asText())) {
+        if (valueNode == null || !valueNode.isString() || !StringUtils.hasText(valueNode.asString())) {
             throw new IllegalStateException("加密字段的 value 不能为空");
         }
-        return crypto.decrypt(valueNode.asText(), resolveAesKey());
+        return crypto.decrypt(valueNode.asString(), resolveAesKey());
     }
 
     @Override
