@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.collections4.MapUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
@@ -52,7 +53,7 @@ public class CustomSecurityUser extends User {
     }
 
     public Long getUserId() {
-        return (Long)attributes.get(AuthenticationInfo.KEY_USER_ID);
+        return MapUtils.getLong(attributes, AuthenticationInfo.KEY_USER_ID);
     }
 
     public String getNickname() {
