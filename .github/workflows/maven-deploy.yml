@@ -1,6 +1,8 @@
 name: Maven Deploy to Nexus
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
     inputs:
       skip_tests:
@@ -23,15 +25,10 @@ on:
 
 jobs:
   deploy:
+    if: github.ref == 'refs/heads/main'
     name: 部署到 Nexus 私服
     runs-on: self-hosted
     steps:
-      - name: 记录开始时间
-        id: start_time
-        run: |
-          echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
-          echo "START_TIME_DISPLAY=$(date '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
-
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -222,131 +219,44 @@ jobs:
             }
           echo "✅ framework-infra 部署完成"
 
-      - name: 发送飞书通知
-        if: always()
-        run: |
-          # 计算执行时长
-          END_TIME=$(date +%s)
-          DURATION=$((END_TIME - START_TIME))
-          DURATION_MIN=$((DURATION / 60))
-          DURATION_SEC=$((DURATION % 60))
+  notify:
+    if: always() && github.ref == 'refs/heads/main'
+    name: 发送飞书通知
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify Maven deploy success in Feishu
+        if: needs.deploy.result == 'success'
+        uses: sephymartin-lab/forge-actions/.github/actions/feishu-notify@main
+        with:
+          webhook: ${{ secrets.FEISHU_WEBHOOK_URL }}
+          secret: ${{ secrets.FEISHU_WEBHOOK_SECRET }}
+          status: success
+          title: 'Maven 部署成功'
+          summary: '${{ github.repository }} 已成功部署到 Nexus。'
+          run-url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          ref-name: ${{ github.ref_name }}
+          sha: ${{ github.sha }}
+          actor: ${{ github.actor }}
+          repository: ${{ github.repository }}
+          workflow: ${{ github.workflow }}
+          run-number: ${{ github.run_number }}
+          event-name: ${{ github.event_name }}
 
-          # 判断执行结果
-          if [ "${{ job.status }}" == "success" ]; then
-            STATUS_TEXT="成功"
-            STATUS_COLOR="green"
-          else
-            STATUS_TEXT="失败"
-            STATUS_COLOR="red"
-          fi
-
-          # 获取触发人信息
-          TRIGGER_USER="${{ github.actor }}"
-
-          # 构建飞书消息卡片 JSON
-          CARD_JSON=$(cat <<EOF
-          {
-            "msg_type": "interactive",
-            "card": {
-              "header": {
-                "title": {
-                  "content": "GitHub Action 执行结果: ${STATUS_TEXT}",
-                  "tag": "plain_text"
-                },
-                "template": "${STATUS_COLOR}"
-              },
-              "elements": [
-                {
-                  "tag": "div",
-                  "fields": [
-                    {
-                      "is_short": true,
-                      "text": {
-                        "tag": "lark_md",
-                        "content": "**仓库信息:**\n${{ github.repository }}"
-                      }
-                    },
-                    {
-                      "is_short": true,
-                      "text": {
-                        "tag": "lark_md",
-                        "content": "**触发事件:**\n${{ github.event_name }}"
-                      }
-                    },
-                    {
-                      "is_short": true,
-                      "text": {
-                        "tag": "lark_md",
-                        "content": "**触发分支:**\n${{ github.ref_name }}"
-                      }
-                    },
-                    {
-                      "is_short": true,
-                      "text": {
-                        "tag": "lark_md",
-                        "content": "**触发人:**\n${TRIGGER_USER}"
-                      }
-                    },
-                    {
-                      "is_short": true,
-                      "text": {
-                        "tag": "lark_md",
-                        "content": "**触发时间:**\n${START_TIME_DISPLAY}"
-                      }
-                    },
-                    {
-                      "is_short": true,
-                      "text": {
-                        "tag": "lark_md",
-                        "content": "**执行时长:**\n${DURATION_MIN}分${DURATION_SEC}秒"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "tag": "action",
-                  "actions": [
-                    {
-                      "tag": "button",
-                      "text": {
-                        "tag": "plain_text",
-                        "content": "查看详细日志"
-                      },
-                      "type": "primary",
-                      "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-                    }
-                  ]
-                }
-              ]
-            }
-          }
-          EOF
-          )
-
-          # 发送飞书通知（支持签名校验）
-          WEBHOOK_URL="${{ secrets.FEISHU_WEBHOOK_URL }}"
-
-          # 如果配置了签名密钥，则添加签名
-          if [ -n "${{ secrets.FEISHU_WEBHOOK_SECRET }}" ]; then
-            # 生成时间戳（秒级）
-            TIMESTAMP=$(date +%s)
-            
-            # 计算签名：SHA256(timestamp + "\n" + secret)
-            SIGN_STRING="${TIMESTAMP}\n${{ secrets.FEISHU_WEBHOOK_SECRET }}"
-            SIGNATURE=$(echo -n -e "${SIGN_STRING}" | openssl dgst -sha256 -binary | base64)
-            
-            echo "使用签名校验发送飞书通知"
-            echo "时间戳: ${TIMESTAMP}"
-            
-            # 在消息 JSON 中添加签名字段
-            CARD_JSON_WITH_SIGN=$(echo "${CARD_JSON}" | jq -c ". + {\"timestamp\": \"${TIMESTAMP}\", \"sign\": \"${SIGNATURE}\"}")
-            
-            curl -X POST "${WEBHOOK_URL}" \
-              -H 'Content-Type: application/json' \
-              -d "${CARD_JSON_WITH_SIGN}"
-          else
-            echo "发送飞书通知（无签名校验）"
-            curl -X POST "${WEBHOOK_URL}" \
-              -H 'Content-Type: application/json' \
-              -d "${CARD_JSON}"
-          fi
+      - name: Notify Maven deploy failure in Feishu
+        if: needs.deploy.result != 'success'
+        uses: sephymartin-lab/forge-actions/.github/actions/feishu-notify@main
+        with:
+          webhook: ${{ secrets.FEISHU_WEBHOOK_URL }}
+          secret: ${{ secrets.FEISHU_WEBHOOK_SECRET }}
+          status: failure
+          title: 'Maven 部署失败'
+          summary: '${{ github.repository }} 部署到 Nexus 失败，请打开 Actions 查看详细错误。'
+          run-url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          ref-name: ${{ github.ref_name }}
+          sha: ${{ github.sha }}
+          actor: ${{ github.actor }}
+          repository: ${{ github.repository }}
+          workflow: ${{ github.workflow }}
+          run-number: ${{ github.run_number }}
+          event-name: ${{ github.event_name }}

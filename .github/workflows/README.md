@@ -19,10 +19,12 @@
 
 #### 触发方式
 
+- **自动触发**：推送代码到 `main` 分支后自动部署
 - **手动触发**：通过 GitHub Web UI 手动触发
   - 导航到仓库的 Actions 页面
   - 选择 "Maven Deploy to Nexus" 工作流
   - 点击 "Run workflow" 按钮
+  - 仅 `main` 分支会执行部署
   - 可选择是否跳过测试（默认跳过）
 
 #### 部署模块
@@ -48,19 +50,20 @@
 - 配置 Nexus 用户名和密码
 - 详见：[自托管 Runner 配置指南](../SELF_HOSTED_RUNNER.md#3-配置-maven-settingsxml)
 
-### 可选配置（飞书通知）
+### 飞书通知配置
 
 | Secret 名称 | 说明 | 是否必需 |
 |------------|------|---------|
-| `FEISHU_WEBHOOK_URL` | 飞书机器人 Webhook URL | 可选（用于部署通知）|
+| `FEISHU_WEBHOOK_URL` | 飞书机器人 Webhook URL | 必需（用于部署通知）|
 | `FEISHU_WEBHOOK_SECRET` | 飞书机器人签名密钥 | 可选（用于签名校验）|
 
 **飞书通知功能**：
 - 在部署完成后自动发送飞书消息卡片
-- 包含仓库信息、执行结果、触发时间、执行时长、触发人
+- 包含仓库、工作流、运行编号、分支、提交、触发人、触发事件和执行结果
 - 提供"查看详细日志"按钮跳转到 GitHub Actions 页面
 - 无论成功或失败都会发送通知
-- 支持签名校验（可选），增强安全性
+- 通过外部 `sephymartin-lab/forge-actions/.github/actions/feishu-notify` action 发送通知
+- 支持签名校验（可选），签名逻辑由外部 action 处理
 
 ### 配置 Secrets 步骤
 
@@ -96,8 +99,7 @@
 
 **签名校验说明**：
 - 签名校验可以防止恶意请求，增强安全性
-- 如果配置了 `FEISHU_WEBHOOK_SECRET`，workflow 会自动使用 SHA256 算法计算签名
-- 签名算法：`sign = Base64(SHA256(timestamp + "\n" + secret))`
+- 如果配置了 `FEISHU_WEBHOOK_SECRET`，外部通知 action 会自动计算签名
 - 如果不需要签名校验，只配置 `FEISHU_WEBHOOK_URL` 即可
 
 ### Maven 认证配置
@@ -169,11 +171,12 @@ container:
 
 消息卡片包含以下信息：
 - **仓库信息**: 仓库完整路径（例如：`owner/repo-name`）
+- **工作流**: GitHub Actions 工作流名称
+- **运行编号**: GitHub Actions run number
 - **触发事件**: 触发类型（例如：`workflow_dispatch` 或 `push`）
 - **触发分支**: Git 分支名称
+- **提交信息**: 当前提交 SHA 的短版本
 - **触发人**: GitHub 用户名
-- **触发时间**: 工作流开始执行的时间
-- **执行时长**: 总执行时间（分钟+秒）
 - **执行结果**: 成功（绿色）或失败（红色）标题
 - **查看详情**: 可点击按钮跳转到 GitHub Actions 详细日志页面
 
@@ -181,7 +184,7 @@ container:
 
 - ✅ **部署成功**: 发送绿色标题的成功通知
 - ❌ **部署失败**: 发送红色标题的失败通知
-- 使用 `if: always()` 确保无论结果如何都会发送通知
+- 通知 job 使用 `needs: deploy` 和 `if: always()`，部署 job 失败后仍会发送失败通知
 
 ### 配置方法
 
@@ -189,7 +192,7 @@ container:
 2. **配置 Secret**: 添加 `FEISHU_WEBHOOK_URL` 到仓库 Secrets
 3. **测试通知**: 手动触发一次 workflow 验证
 
-如果不需要通知功能，无需配置 `FEISHU_WEBHOOK_URL`，通知步骤会自动跳过（使用 `if: always()` 确保不影响主流程）。
+`FEISHU_WEBHOOK_URL` 是通知 action 的必填输入；未配置时，deploy job 不会被阻止完成，但 notify job 会失败。
 
 ## GitHub Actions vs Gitea Actions 的主要差异
 
@@ -347,14 +350,13 @@ notify-success (成功通知) 或 notify-failure (失败通知)
     -d "{\"timestamp\":\"${TIMESTAMP}\",\"sign\":\"${SIGN}\",\"msg_type\":\"text\",\"content\":{\"text\":\"测试消息\"}}"
   ```
 - 确认 self-hosted runner 可以访问飞书 API（检查网络和防火墙）
-- 查看工作流日志中的 curl 命令输出
-- 通知失败不影响主流程（使用 `if: always()` 确保总是执行）
+- 查看 notify job 中外部 action 的日志输出
+- 通知失败不会阻止已经完成的 deploy job，但会使 notify job 失败
 
 **签名校验错误**:
 - 如果收到 "sign invalid" 错误，检查：
   - `FEISHU_WEBHOOK_SECRET` 是否与飞书机器人配置的密钥一致
-  - 时间戳格式是否正确（秒级时间戳）
-  - 签名算法是否正确：`Base64(SHA256(timestamp + "\n" + secret))`
+  - 外部通知 action 是否已被正确加载
 
 ### 5. Docker 容器权限问题
 
@@ -387,9 +389,9 @@ on:
       - 'v*'
 ```
 
-### 添加主分支推送触发
+### 调整自动部署分支
 
-如果需要在推送到主分支时自动部署：
+当前工作流在推送到 `main` 分支时自动部署。如果需要调整自动部署分支，可以修改 `on.push.branches`：
 
 ```yaml
 on:
@@ -397,8 +399,7 @@ on:
     # ...
   push:
     branches:
-      - main
-      - master
+      - release
 ```
 
 ### 添加构建矩阵（多版本测试）

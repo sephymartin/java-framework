@@ -15,15 +15,11 @@
  */
 package top.sephy.infra.jackson3.ser;
 
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
-import java.security.MessageDigest;
-import java.security.SecureRandom;
 import java.util.Base64;
 
 import javax.crypto.Cipher;
-import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.springframework.stereotype.Component;
@@ -32,33 +28,27 @@ import org.springframework.util.StringUtils;
 import top.sephy.infra.exception.SystemException;
 
 /**
- * 使用 JDK 标准库执行带 {@code @EncryptedField} 字段的 AES-GCM 加解密。
+ * 使用 JDK 标准库执行与 MySQL 两参数 {@code AES_ENCRYPT(value, key)} 兼容的加解密。
+ *
+ * 协议固定使用 UTF-8、AES-128-ECB、PKCS padding 和标准 Base64。密钥按 MySQL
+ * 两参数模式的规则折叠到 16 字节 AES 密钥。
  */
 @Component
 public class EncryptedFieldCrypto {
 
-    private static final String CIPHER_TRANSFORMATION = "AES/GCM/NoPadding";
+    private static final String CIPHER_TRANSFORMATION = "AES/ECB/PKCS5Padding";
 
     private static final String KEY_ALGORITHM = "AES";
 
-    private static final int NONCE_LENGTH_BYTES = 12;
-
-    private static final int TAG_LENGTH_BITS = 128;
-
-    private final SecureRandom secureRandom = new SecureRandom();
+    private static final int AES_BLOCK_SIZE_BYTES = 16;
 
     public String encrypt(String plainText, String aesKey) {
         validateInput(plainText, aesKey);
-        byte[] nonce = new byte[NONCE_LENGTH_BYTES];
-        secureRandom.nextBytes(nonce);
         try {
             Cipher cipher = Cipher.getInstance(CIPHER_TRANSFORMATION);
-            cipher.init(Cipher.ENCRYPT_MODE, key(aesKey), new GCMParameterSpec(TAG_LENGTH_BITS, nonce));
+            cipher.init(Cipher.ENCRYPT_MODE, key(aesKey));
             byte[] cipherText = cipher.doFinal(plainText.getBytes(StandardCharsets.UTF_8));
-            return Base64.getEncoder().encodeToString(ByteBuffer.allocate(nonce.length + cipherText.length)
-                .put(nonce)
-                .put(cipherText)
-                .array());
+            return Base64.getEncoder().encodeToString(cipherText);
         } catch (GeneralSecurityException exception) {
             throw new SystemException("字段加密失败", exception);
         }
@@ -72,31 +62,25 @@ public class EncryptedFieldCrypto {
         } catch (IllegalArgumentException exception) {
             throw new SystemException("字段密文不是有效的 Base64", exception);
         }
-        if (payload.length <= NONCE_LENGTH_BYTES) {
+        if (payload.length == 0 || payload.length % AES_BLOCK_SIZE_BYTES != 0) {
             throw new SystemException("字段密文长度无效");
         }
-
-        byte[] nonce = new byte[NONCE_LENGTH_BYTES];
-        byte[] cipherText = new byte[payload.length - NONCE_LENGTH_BYTES];
-        System.arraycopy(payload, 0, nonce, 0, nonce.length);
-        System.arraycopy(payload, nonce.length, cipherText, 0, cipherText.length);
         try {
             Cipher cipher = Cipher.getInstance(CIPHER_TRANSFORMATION);
-            cipher.init(Cipher.DECRYPT_MODE, key(aesKey), new GCMParameterSpec(TAG_LENGTH_BITS, nonce));
-            return new String(cipher.doFinal(cipherText), StandardCharsets.UTF_8);
+            cipher.init(Cipher.DECRYPT_MODE, key(aesKey));
+            return new String(cipher.doFinal(payload), StandardCharsets.UTF_8);
         } catch (GeneralSecurityException exception) {
             throw new SystemException("字段解密失败", exception);
         }
     }
 
     private SecretKeySpec key(String aesKey) {
-        try {
-            byte[] digest = MessageDigest.getInstance("SHA-256")
-                .digest(aesKey.getBytes(StandardCharsets.UTF_8));
-            return new SecretKeySpec(digest, KEY_ALGORITHM);
-        } catch (GeneralSecurityException exception) {
-            throw new SystemException("无法初始化字段加密密钥", exception);
+        byte[] derivedKey = new byte[AES_BLOCK_SIZE_BYTES];
+        byte[] keyBytes = aesKey.getBytes(StandardCharsets.UTF_8);
+        for (int index = 0; index < keyBytes.length; index++) {
+            derivedKey[index % AES_BLOCK_SIZE_BYTES] ^= keyBytes[index];
         }
+        return new SecretKeySpec(derivedKey, KEY_ALGORITHM);
     }
 
     private void validateInput(String value, String aesKey) {
