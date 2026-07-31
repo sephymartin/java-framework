@@ -30,7 +30,7 @@ import top.sephy.infra.jackson3.Jackson3ObjectMapperFactory;
 
 public abstract class JacksonUtils {
 
-    private static final ObjectMapper DEFAULT_OBJECT_MAPPER = Jackson3ObjectMapperFactory.newDefaultObjectMapper();
+    private static final ObjectMapper DEFAULT_OBJECT_MAPPER = newDefaultObjectMapper();
 
     private static final ObjectMapper DEFAULT_OBJECT_MAPPER_INCLUDE_NULL =
         Jackson3ObjectMapperFactory.newDefaultObjectMapperIncludeNull();

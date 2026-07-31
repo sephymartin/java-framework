@@ -37,10 +37,6 @@ import top.sephy.infra.exception.SystemException;
 @Component
 public class EncryptedFieldCrypto {
 
-    public static final String ALGORITHM = "JAVA_AES_GCM";
-
-    public static final String ENCODING = "BASE64";
-
     private static final String CIPHER_TRANSFORMATION = "AES/GCM/NoPadding";
 
     private static final String KEY_ALGORITHM = "AES";
