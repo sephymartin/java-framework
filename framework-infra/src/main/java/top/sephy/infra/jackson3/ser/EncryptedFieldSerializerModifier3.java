@@ -38,11 +38,8 @@ public class EncryptedFieldSerializerModifier3 extends ValueSerializerModifier {
 
     private final String defaultAesKey;
 
-    private final EncryptedFieldCrypto crypto;
-
     public EncryptedFieldSerializerModifier3(String defaultAesKey) {
         this.defaultAesKey = defaultAesKey;
-        this.crypto = new EncryptedFieldCrypto();
     }
 
     @Override
@@ -57,8 +54,8 @@ public class EncryptedFieldSerializerModifier3 extends ValueSerializerModifier {
             if (propertyType.getRawClass() != String.class) {
                 throw new IllegalStateException("@EncryptedField 只支持 String 字段: " + property.getName());
             }
-            ValueSerializer<Object> serializer = castSerializer(new EncryptedFieldSerializer3(resolveAesKey(annotation),
-                crypto));
+            ValueSerializer<Object> serializer =
+                castSerializer(new EncryptedFieldSerializer3(resolveAesKey(annotation)));
             property.assignSerializer(serializer);
         }
         return beanProperties;

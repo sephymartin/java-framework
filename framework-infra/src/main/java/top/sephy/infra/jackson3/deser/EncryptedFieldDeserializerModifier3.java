@@ -27,7 +27,6 @@ import tools.jackson.databind.deser.BeanDeserializerBuilder;
 import tools.jackson.databind.deser.SettableBeanProperty;
 import tools.jackson.databind.deser.ValueDeserializerModifier;
 import top.sephy.infra.jackson.annotation.EncryptedField;
-import top.sephy.infra.jackson3.ser.EncryptedFieldCrypto;
 
 /**
  * 为标记了 {@link EncryptedField} 的 Jackson 3 字符串属性安装解密反序列化器。
@@ -39,11 +38,8 @@ public class EncryptedFieldDeserializerModifier3 extends ValueDeserializerModifi
 
     private final String defaultAesKey;
 
-    private final EncryptedFieldCrypto crypto;
-
     public EncryptedFieldDeserializerModifier3(String defaultAesKey) {
         this.defaultAesKey = defaultAesKey;
-        this.crypto = new EncryptedFieldCrypto();
     }
 
     @Override
@@ -62,7 +58,7 @@ public class EncryptedFieldDeserializerModifier3 extends ValueDeserializerModifi
                 throw new IllegalStateException("@EncryptedField 只支持 String 字段: " + property.getName());
             }
             encryptedProperties.add(property.withValueDeserializer(new EncryptedFieldDeserializer3(
-                annotation.aesKey(), defaultAesKey, crypto)));
+                annotation.aesKey(), defaultAesKey)));
         }
         for (SettableBeanProperty property : encryptedProperties) {
             builder.addOrReplaceProperty(property, true);

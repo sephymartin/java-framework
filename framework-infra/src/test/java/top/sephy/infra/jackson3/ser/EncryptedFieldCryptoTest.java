@@ -24,12 +24,11 @@ import java.util.Base64;
 import org.junit.jupiter.api.Test;
 
 import top.sephy.infra.exception.SystemException;
+import top.sephy.infra.utils.AESUtils;
 
 class EncryptedFieldCryptoTest {
 
     private static final String KEY = "secret";
-
-    private final EncryptedFieldCrypto crypto = new EncryptedFieldCrypto();
 
     /**
      * Test scenario: MySQL-compatible AES_ENCRYPT uses key "secret" and plaintext "hello".
@@ -38,7 +37,7 @@ class EncryptedFieldCryptoTest {
      */
     @Test
     void shouldEncryptToMySqlCompatibleFixedVector() {
-        assertEquals("wpDott5OpXc0FOAZ/n8Xow==", crypto.encrypt("hello", KEY));
+        assertEquals("wpDott5OpXc0FOAZ/n8Xow==", AESUtils.encrypt("hello", KEY));
     }
 
     /**
@@ -48,7 +47,7 @@ class EncryptedFieldCryptoTest {
      */
     @Test
     void shouldDecryptMySqlCompatibleFixedVector() {
-        assertEquals("hello", crypto.decrypt("wpDott5OpXc0FOAZ/n8Xow==", KEY));
+        assertEquals("hello", AESUtils.decrypt("wpDott5OpXc0FOAZ/n8Xow==", KEY));
     }
 
     /**
@@ -62,8 +61,8 @@ class EncryptedFieldCryptoTest {
         String plainText = "你好，世界🌏";
         String cipherText = "+mJsS7jKdvk4NHmxJYSNRJYp+Cmqu3WccAtZEKR1DW0=";
 
-        assertEquals(cipherText, crypto.encrypt(plainText, KEY));
-        assertEquals(plainText, crypto.decrypt(cipherText, KEY));
+        assertEquals(cipherText, AESUtils.encrypt(plainText, KEY));
+        assertEquals(plainText, AESUtils.decrypt(cipherText, KEY));
     }
 
     /**
@@ -73,10 +72,10 @@ class EncryptedFieldCryptoTest {
      */
     @Test
     void shouldRoundTripEmptyTextWithPaddingBlock() {
-        String cipherText = crypto.encrypt("", KEY);
+        String cipherText = AESUtils.encrypt("", KEY);
 
         assertEquals(16, Base64.getDecoder().decode(cipherText).length);
-        assertEquals("", crypto.decrypt(cipherText, KEY));
+        assertEquals("", AESUtils.decrypt(cipherText, KEY));
     }
 
     /**
@@ -91,10 +90,10 @@ class EncryptedFieldCryptoTest {
 
         for (int index = 0; index < lengths.length; index++) {
             String plainText = "x".repeat(lengths[index]);
-            String cipherText = crypto.encrypt(plainText, KEY);
+            String cipherText = AESUtils.encrypt(plainText, KEY);
 
             assertEquals(expectedCiphertextLengths[index], Base64.getDecoder().decode(cipherText).length);
-            assertEquals(plainText, crypto.decrypt(cipherText, KEY));
+            assertEquals(plainText, AESUtils.decrypt(cipherText, KEY));
         }
     }
 
@@ -107,7 +106,7 @@ class EncryptedFieldCryptoTest {
     void shouldRoundTripJsonText() {
         String plainText = "{\"bankCardNumber\":\"6222021234567890\",\"cardholderName\":\"张三\"}";
 
-        assertEquals(plainText, crypto.decrypt(crypto.encrypt(plainText, KEY), KEY));
+        assertEquals(plainText, AESUtils.decrypt(AESUtils.encrypt(plainText, KEY), KEY));
     }
 
     /**
@@ -118,7 +117,7 @@ class EncryptedFieldCryptoTest {
     @Test
     void shouldRejectInvalidBase64() {
         SystemException exception = assertThrows(SystemException.class,
-            () -> crypto.decrypt("not-base64", KEY));
+            () -> AESUtils.decrypt("not-base64", KEY));
 
         assertEquals("字段密文不是有效的 Base64", exception.getMessage());
     }
@@ -133,7 +132,7 @@ class EncryptedFieldCryptoTest {
         String cipherText = Base64.getEncoder().encodeToString("short".getBytes(StandardCharsets.UTF_8));
 
         SystemException exception = assertThrows(SystemException.class,
-            () -> crypto.decrypt(cipherText, KEY));
+            () -> AESUtils.decrypt(cipherText, KEY));
 
         assertEquals("字段密文长度无效", exception.getMessage());
     }
@@ -145,9 +144,9 @@ class EncryptedFieldCryptoTest {
      */
     @Test
     void shouldRejectWrongKey() {
-        String cipherText = crypto.encrypt("sensitive-value", KEY);
+        String cipherText = AESUtils.encrypt("sensitive-value", KEY);
 
-        assertThrows(SystemException.class, () -> crypto.decrypt(cipherText, "wrong-key"));
+        assertThrows(SystemException.class, () -> AESUtils.decrypt(cipherText, "wrong-key"));
     }
 
     /**
@@ -158,7 +157,7 @@ class EncryptedFieldCryptoTest {
     @Test
     void shouldRejectBlankKey() {
         SystemException exception = assertThrows(SystemException.class,
-            () -> crypto.encrypt("value", "   "));
+            () -> AESUtils.encrypt("value", "   "));
 
         assertEquals("未配置字段加密 AES 密钥", exception.getMessage());
     }

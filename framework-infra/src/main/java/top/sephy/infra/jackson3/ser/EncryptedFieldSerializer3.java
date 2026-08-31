@@ -15,13 +15,14 @@
  */
 package top.sephy.infra.jackson3.ser;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 import tools.jackson.core.JacksonException;
 import tools.jackson.core.JsonGenerator;
 import tools.jackson.databind.SerializationContext;
 import tools.jackson.databind.ser.std.StdSerializer;
-
-import java.io.Serial;
-import java.io.Serializable;
+import top.sephy.infra.utils.AESUtils;
 
 /**
  * Jackson 3 的加密字段序列化器。
@@ -33,19 +34,16 @@ public class EncryptedFieldSerializer3 extends StdSerializer<String> implements 
 
     private final String aesKey;
 
-    private final EncryptedFieldCrypto crypto;
-
-    public EncryptedFieldSerializer3(String aesKey, EncryptedFieldCrypto crypto) {
+    public EncryptedFieldSerializer3(String aesKey) {
         super(String.class);
         this.aesKey = aesKey;
-        this.crypto = crypto;
     }
 
     @Override
     public void serialize(String value, JsonGenerator gen, SerializationContext provider) throws JacksonException {
         gen.writeStartObject();
         gen.writeBooleanProperty("encrypted", true);
-        gen.writeStringProperty("value", crypto.encrypt(value, aesKey));
+        gen.writeStringProperty("value", AESUtils.encrypt(value, aesKey));
         gen.writeEndObject();
     }
 }

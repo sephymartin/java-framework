@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
 import lombok.Data;
 import tools.jackson.databind.json.JsonMapper;
 import top.sephy.infra.jackson.annotation.EncryptedField;
-import top.sephy.infra.jackson3.ser.EncryptedFieldCrypto;
+import top.sephy.infra.utils.AESUtils;
 
 class EncryptedFieldModule3Test {
 
@@ -55,9 +55,8 @@ class EncryptedFieldModule3Test {
 
         String defaultCipherText = mapper.readTree(json).get("defaultSecret").get("value").asText();
         String specificCipherText = mapper.readTree(json).get("specificSecret").get("value").asText();
-        EncryptedFieldCrypto crypto = new EncryptedFieldCrypto();
-        assertEquals("default-secret", crypto.decrypt(defaultCipherText, "default-aes-key"));
-        assertEquals("specific-secret", crypto.decrypt(specificCipherText, "specific-aes-key"));
+        assertEquals("default-secret", AESUtils.decrypt(defaultCipherText, "default-aes-key"));
+        assertEquals("specific-secret", AESUtils.decrypt(specificCipherText, "specific-aes-key"));
     }
 
     /**
