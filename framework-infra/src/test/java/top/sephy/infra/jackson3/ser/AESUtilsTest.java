@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
 import top.sephy.infra.exception.SystemException;
 import top.sephy.infra.utils.AESUtils;
 
-class EncryptedFieldCryptoTest {
+class AESUtilsTest {
 
     private static final String KEY = "secret";
 
